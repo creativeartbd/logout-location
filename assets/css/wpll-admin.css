@@ -1,0 +1,141 @@
+.wpll-container {
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: -1px 2px 31px #ddd;
+}
+
+img.wpll-logo {
+    margin-top: 10px;
+}
+
+.wpll-tab {
+    margin-top: 15px !important;
+}
+
+.wpll-tab .nav-tab {
+    border: 0;
+    margin-right: 10px;
+    margin-left: 0;
+    padding: 10px 20px;
+    border-bottom: 0;
+    border-top: 3px solid #ddd;
+    background: #fff;
+}
+
+.wpll-tab a.nav-tab.nav-tab-active {
+    background-color: #fff;
+    color: #000;
+    border: 0;
+    border-top: 3px solid #0095ff;
+}
+
+.wpll-tab.nav-tab-wrapper,
+.wrap h2.nav-tab-wrapper,
+h1.nav-tab-wrapper {
+    border-bottom: 0;
+}
+
+.wpll-table {
+    border-collapse: initial;
+    max-width: 992px;
+}
+
+.wpll-table h4 {
+    margin: 0;
+    border-bottom: 1px dashed #ddd;
+    padding-bottom: 10px;
+}
+
+.wpll-table i {
+    font-weight: bold;
+    border-bottom: 1px dashed #ddd;
+}
+
+.form-table td {
+    padding: 20px;
+}
+
+.form-table th {
+    padding-left: 15px;
+}
+
+@media screen and (max-width: 782px) {
+    .form-table td {
+        padding-left: 10px;
+    }
+}
+
+.wp-admin p input[type="checkbox"],
+.wp-admin p input[type="radio"],
+td>input[type="checkbox"] {
+    margin-bottom: 5px;
+}
+
+a.nav-tab.pro_link {
+    background-color: #37acff;
+    color: #fff;
+}
+
+.pro_color {
+    color: red;
+}
+
+input#save_changes {
+    background-color: #0095ff;
+    box-shadow: none;
+    border: none;
+    text-shadow: none;
+    padding: 0px 15px;
+    border-radius: 0;
+    height: 30px;
+}
+
+.valid_license {
+    color: green;
+}
+
+.invalid_license {
+    color: red;
+}
+
+.any_roles,
+.multiple_roles {
+    display: none;
+}
+
+#wpll_settings .description {
+    margin-bottom: 20px;
+}
+
+#ajax_settings_result .updated,
+#ajax_settings_result .error,
+.wpll-warning {
+    padding: 10px;
+    margin-top: 15px;
+    margin-bottom: 0;
+    border-top: 0;
+    border-bottom: 0;
+}
+
+#ajax_settings_result .updated {
+    background-color: #f2ffeb;
+}
+
+#ajax_settings_result .error {
+    background-color: #ffecec;
+}
+
+.wpll-warning {
+    background-color: #fff9ec;
+}
+
+.general_table_heading,
+.role_list,
+.redirect_to {
+    display: none;
+}
+
+.wpll-table select,
+input[type="text"] {
+    max-width: 15rem;
+}
