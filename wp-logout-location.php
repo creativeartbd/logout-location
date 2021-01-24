@@ -147,8 +147,6 @@ class WP_Logout_Location
 			'saving' => __('Saving. Please wait ...', 'wp-logout-location'),
 			'save_success' => __('Settings saved.', 'wp-logout-location'),
 			'nonce_settings' => wp_create_nonce('nonce_settings_action'),
-			'nonce_license_status' => wp_create_nonce('nonce_license_status_action'),
-			'none_realtime_license' => wp_create_nonce('nonce_realtime_license_action'),
 		]);
 	}
 
@@ -413,10 +411,9 @@ class WP_Logout_Location
 		check_ajax_referer('nonce_settings_action');
 
 		$data = [];
-		$wpll_license_key = isset($_POST['wpll_license_key']) ? sanitize_text_field($_POST['wpll_license_key']) : '';
-		$button_for       = isset($_POST['button_for']) ? sanitize_text_field($_POST['button_for'])            : '';
-		$button_action    = isset($_POST['button_action']) ? sanitize_text_field($_POST['button_action'])      : '';
-		$role_type        = isset($_POST['role_type']) ? absint($_POST['role_type'])                           : 0;
+		$button_for       = isset($_POST['button_for']) ? sanitize_text_field($_POST['button_for']) : '';
+		$button_action    = isset($_POST['button_action']) ? sanitize_text_field($_POST['button_action']) : '';
+		$role_type        = isset($_POST['role_type']) ? sanitize_text_field($_POST['role_type']) : 0;
 
 		$any_role_will_redirect = isset($_POST['any_role_will_redirect']) ? sanitize_text_field($_POST['any_role_will_redirect']) : 0;
 		$get_any_role_redirect_to = isset($_POST['any_role_redirect_to']) ? (array) $_POST['any_role_redirect_to'] : [];
@@ -479,18 +476,19 @@ class WP_Logout_Location
 			wp_send_json_success(array(
 				'message' => __('Settings Saved', 'wp-logout-location'),
 			));
+
 		} elseif ('general' == $button_for) {
 
 			if (empty($role_type)) {
 				wp_send_json_error(array(
 					'message' => __('Please select role type', 'wp-logout-location')
 				));
-			} elseif (!in_array($role_type, [1, 2])) {
+			} elseif (!in_array($role_type, ['any_roles', 'multiple_roles'])) {
 
 				wp_send_json_error(array(
 					'message' => __('Wrong parameter given', 'wp-logout-location')
 				));
-			} elseif (1 == $role_type) {
+			} elseif ('any_roles' == $role_type) {
 
 				if (empty($any_role_will_redirect)) {
 					wp_send_json_error(array(
@@ -519,10 +517,40 @@ class WP_Logout_Location
 								'message' => __('Choose a post link', 'wp-logout-location')
 							));
 						}
+					} elseif('custom_post_link' == $any_role_will_redirect) {
+						if (empty($any_role_redirect_to['custom_post_link'])) {
+							wp_send_json_error(array(
+								'message' => __('Choose a custom post link', 'wp-logout-location')
+							));
+						}
+					} elseif('product_page_link' == $any_role_will_redirect) {
+						if (empty($any_role_redirect_to['product_page_link'])) {
+							wp_send_json_error(array(
+								'message' => __('Choose a product page', 'wp-logout-location')
+							));
+						}
+					} elseif('user_profile_link' == $any_role_will_redirect) {
+						if (empty($any_role_redirect_to['user_profile_link'])) {
+							wp_send_json_error(array(
+								'message' => __('Choose a user name', 'wp-logout-location')
+							));
+						}
+					} elseif('category_link' == $any_role_will_redirect) {
+						if (empty($any_role_redirect_to['category_link'])) {
+							wp_send_json_error(array(
+								'message' => __('Choose a category name', 'wp-logout-location')
+							));
+						}
+					} elseif('tag_link' == $any_role_will_redirect) {
+						if (empty($any_role_redirect_to['tag_link'])) {
+							wp_send_json_error(array(
+								'message' => __('Choose a tag name', 'wp-logout-location')
+							));
+						}
 					}
 				}
 
-				$data['role_type'] = 1;
+				$data['role_type'] = 'any_roles';
 				$data['any_role_will_redirect'] = $any_role_will_redirect;
 
 				foreach ($any_role_redirect_to as $key => $value) {
@@ -534,9 +562,14 @@ class WP_Logout_Location
 				$data['any_role_redirect_to'] = [
 					'page_link'	=> $any_role_redirect_to['page_link'],
 					'custom_link' => $any_role_redirect_to['custom_link'],
-					'post_link' => $any_role_redirect_to['post_link']
+					'post_link' => $any_role_redirect_to['post_link'],
+					'custom_post_link' => $any_role_redirect_to['custom_post_link'],
+					'product_page_link' => $any_role_redirect_to['product_page_link'],
+					'user_profile_link' => $any_role_redirect_to['user_profile_link'],
+					'category_link' => $any_role_redirect_to['category_link'],
+					'tag_link' => $any_role_redirect_to['tag_link'],
 				];
-			} elseif (2 == $role_type) {
+			} elseif ('multiple_roles' == $role_type) {
 
 				if (!array_filter($multiple_role_will_redirect)) {
 					wp_send_json_error(array(
@@ -558,6 +591,36 @@ class WP_Logout_Location
 							wp_send_json_error(array(
 								'message' => __('Please a post link', 'wp-logout-location')
 							));
+						} elseif('custom_post_link' == $any_role_will_redirect) {
+							if (empty($any_role_redirect_to['custom_post_link'])) {
+								wp_send_json_error(array(
+									'message' => __('Choose a custom post link', 'wp-logout-location')
+								));
+							}
+						} elseif('product_page_link' == $any_role_will_redirect) {
+							if (empty($any_role_redirect_to['product_page_link'])) {
+								wp_send_json_error(array(
+									'message' => __('Choose a product page', 'wp-logout-location')
+								));
+							}
+						} elseif('user_profile_link' == $any_role_will_redirect) {
+							if (empty($any_role_redirect_to['user_profile_link'])) {
+								wp_send_json_error(array(
+									'message' => __('Choose a user name', 'wp-logout-location')
+								));
+							}
+						} elseif('category_link' == $any_role_will_redirect) {
+							if (empty($any_role_redirect_to['category_link'])) {
+								wp_send_json_error(array(
+									'message' => __('Choose a category name', 'wp-logout-location')
+								));
+							}
+						} elseif('tag_link' == $any_role_will_redirect) {
+							if (empty($any_role_redirect_to['tag_link'])) {
+								wp_send_json_error(array(
+									'message' => __('Choose a tag name', 'wp-logout-location')
+								));
+							}
 						}
 					}
 				}
@@ -574,7 +637,7 @@ class WP_Logout_Location
 					}
 				}
 
-				$data['role_type'] = 2;
+				$data['role_type'] = 'multiple_roles';
 				$data['multiple_role_will_redirect'] = $multiple_role_will_redirect;
 				$data['multiple_role_redirect_to'] = $multiple_role_redirect_to;
 			}
@@ -629,7 +692,7 @@ class WP_Logout_Location
 			exit();
 		}
 
-		if (1 == $options['role_type']) {
+		if ('any_roles' == $options['role_type']) {
 			if ('page_link' == $any_role_will_redirect) {
 				wp_redirect($any_role_redirect_to['page_link']);
 			} elseif ('custom_link' == $any_role_will_redirect) {
@@ -637,7 +700,7 @@ class WP_Logout_Location
 			} elseif ('post_link' == $any_role_will_redirect) {
 				wp_redirect($any_role_redirect_to['post_link']);
 			}
-		} elseif (2 == $options['role_type']) {
+		} elseif ('multiple_roles' == $options['role_type']) {
 			// Get current user role
 			$current_user_role = strtolower($user->roles[0]);
 			if ('page_link' == $multiple_role_will_redirect[$current_user_role]) {

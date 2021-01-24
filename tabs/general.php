@@ -6,6 +6,10 @@ if (!defined('ABSPATH')) {
 }
 
 $options   = self::$options['wpll_settings']['wpll_general_settings'];
+
+echo '<pre>';
+    print_r($options);
+echo '</pre>';
 $role_type = $options['role_type'];
 
 $any_role_will_redirect = isset($options['any_role_will_redirect']) ? $options['any_role_will_redirect']: [];
@@ -28,7 +32,7 @@ $total_roles = count($all_roles);
     <td colspan="2">
         <select name="role_type" class="choose_role_type">
             <option value=""><?php _e('--Choose Roles Type--', 'wp-logout-location'); ?></option>
-            <option value="any_roles" <?php if ('any_role' == $role_type) echo 'selected'; ?>><?php _e('Any Roles', 'wp-logout-location'); ?></option>
+            <option value="any_roles" <?php if ('any_roles' == $role_type) echo 'selected'; ?>><?php _e('Any Roles', 'wp-logout-location'); ?></option>
             <option value="multiple_roles" <?php if ('multiple_roles' == $role_type) echo 'selected'; ?>><?php _e('Multiple Roles', 'wp-logout-location'); ?></option>
         </select>
     </td>
@@ -124,14 +128,16 @@ $total_roles = count($all_roles);
         <select name="any_role_redirect_to[product_page_link]">
             <option value=""><?php _e('--Select Product--', 'wp-logout-location'); ?></option>
             <?php
-            foreach ($this->get_all_posts() as $key => $value) {
-                $selected = '';
-                if (isset($any_role_redirect_to['product_page_link'])) {
-                    if ($value == $any_role_redirect_to['product_page_link']) {
-                        $selected = 'selected';
+            if($this->get_all_products()) {
+                foreach ($this->get_all_products() as $key => $value) {
+                    $selected = '';
+                    if (isset($any_role_redirect_to['product_page_link'])) {
+                        if ($value == $any_role_redirect_to['product_page_link']) {
+                            $selected = 'selected';
+                        }
                     }
+                    echo "<option value='{$value}' {$selected}>{$key}</option>";
                 }
-                echo "<option value='{$value}' {$selected}>{$key}</option>";
             }
             ?>
         </select>
@@ -168,7 +174,7 @@ $total_roles = count($all_roles);
                     $category_slug = $data->slug;
                     $selected = '';
                     if (isset($any_role_redirect_to['category_link'])) {
-                        if ($user_login == $any_role_redirect_to['category_link']) {
+                        if ($category_slug == $any_role_redirect_to['category_link']) {
                             $selected = 'selected';
                         }
                     }
@@ -190,7 +196,7 @@ $total_roles = count($all_roles);
                     $tag_slug = $data->slug;
                     $selected = '';
                     if (isset($any_role_redirect_to['tag_link'])) {
-                        if ($user_login == $any_role_redirect_to['tag_link']) {
+                        if ($tag_slug == $any_role_redirect_to['tag_link']) {
                             $selected = 'selected';
                         }
                     }
@@ -233,11 +239,13 @@ foreach ($all_roles as $role) {
                     $page_title = $page->post_title;
                     $page_name = $page->post_name;
                     $selected = '';
+
                     if (isset($multiple_role_redirect_to[$role_key]['page_link'])) {
                         if ($page_name == $multiple_role_redirect_to[$role_key]['page_link']) {
                             $selected = 'selected';
                         }
                     }
+
                     echo "<option value='{$page_name}' {$selected}>{$page_title}</option>";
                 }
                 ?>
@@ -328,7 +336,7 @@ foreach ($all_roles as $role) {
                         $category_slug = $data->slug;
                         $selected = '';
                         if (isset($any_role_redirect_to['category_link'])) {
-                            if ($user_login == $any_role_redirect_to['category_link']) {
+                            if ($category_slug == $any_role_redirect_to['category_link']) {
                                 $selected = 'selected';
                             }
                         }
@@ -350,7 +358,7 @@ foreach ($all_roles as $role) {
                         $tag_slug = $data->slug;
                         $selected = '';
                         if (isset($any_role_redirect_to['tag_link'])) {
-                            if ($user_login == $any_role_redirect_to['tag_link']) {
+                            if ($tag_slug == $any_role_redirect_to['tag_link']) {
                                 $selected = 'selected';
                             }
                         }

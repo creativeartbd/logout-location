@@ -40,32 +40,20 @@
     // For Role tab
     // =============
 
-    // var role_type = $(".choose_role_type").val();
-    // if (role_type.length > 0) {
-    //     // If select data is found
-    //     $(".general_table_heading").show();
-    //     if (role_type == 1) {
-    //         $(".any_roles").show("slow");
-    //     } else if (role_type == 2) {
-    //         $(".multiple_roles").show("slow");
-    //     }
-    //     // For select change
-    //     $(".choose_role_type").change(function() {
-    //         var role_type = $(this).val();
-    //         if (role_type == 1) {
-    //             $(".any_roles").show("slow");
-    //             $(".multiple_roles").hide("slow");
-    //         } else if (role_type == 2) {
-    //             $(".any_roles").hide("slow");
-    //             $(".multiple_roles").show("slow");
-    //         }
-    //     });
-    // }
-
     var $choose_role_type = $('.choose_role_type'),
         $role_list = $('.role_list'),
         $where_to_redirect = $('.where_to_redirect'),
-        $redirect_to = $('.redirect_to');
+        $redirect_to = $('.redirect_to'),
+        $selected_role_type = $choose_role_type.val(),
+        $selected_where_to_redirect = $where_to_redirect.val();
+
+    // For existing db values
+    $('.' + $choose_role_type.val()).show();
+    $('.' + $where_to_redirect.val()).show();
+
+    console.log($where_to_redirect.val());
+
+    // For existing db values end here
 
     $choose_role_type.on('change', function() {
         var value = $(this).val();
