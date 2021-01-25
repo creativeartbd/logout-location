@@ -5,12 +5,15 @@ if (!defined('ABSPATH')) {
 	wp_die(__('Do not open this file directly.', 'wp-logout-location'));
 }
 
-$options = self::$options['wpll_settings']['wpll_logout_history']; 
+$options = isset(self::$options['wpll_settings']['wpll_logout_history']) ? self::$options['wpll_settings']['wpll_logout_history'] : ''; 
 ?>
-
-<h4><?php _e('User logout history', 'wp-logout-location'); ?></h4>
-<p class="description"><?php _e('See all users logout history', 'wp-logout-location'); ?></p>
 <?php if ($options) { ?>
+    <tr>
+        <td colspan="6">
+            <h4><?php _e('Logout history', 'wp-logout-location'); ?></h4>
+            <p class="description"><?php _e('See all users logout history. To clear all the history please use the Clear History button.', 'wp-logout-location'); ?></p>
+        </td>
+    </tr>
     <tr>
         <td><strong><?php _e('Sl', 'wp-logout-location'); ?></strong></td>
         <td><strong><?php _e('Username', 'wp-logout-location'); ?></strong></td>
@@ -37,3 +40,4 @@ $options = self::$options['wpll_settings']['wpll_logout_history'];
     echo "<div>";
 }
 ?>
+<input type="hidden" name="button_for" value="logout-history">

@@ -374,6 +374,7 @@ class WP_Logout_Location {
 	?>
 		<div class="wrap">
 			<h1 class="wpll-logo"><img src="<?php echo $this->plugin_url . 'assets/img/wp-logout-location-logo.png'; ?>" alt="WP Logout Location" class="wpll-logo"></h1>
+			<p class="wpll-intro-text"><?php _e('Easy way to choose where to redirect after logout from your WordPress dashboard. You can choose any WordPress role or custom role to redirect your desire location. You can redirect to WordPres page, post, custom post, product(Woocommerce), category, tag, custom link, user page.', 'wp-logout-location'); ?></p>
 			<div class="nav-tab-wrapper wpll-tab">
 				<a href="<?php echo admin_url('options-general.php?page=wp-logout-location&tab=general'); ?>" class="nav-tab <?php if ('general' === $tab) echo 'nav-tab-active'; ?>"><?php _e('General', 'wp-logout-location'); ?></a>
 				<a href="<?php echo admin_url('options-general.php?page=wp-logout-location&tab=accesslist'); ?>" class="nav-tab <?php if ('accesslist' === $tab) echo 'nav-tab-active'; ?>"><?php _e('Access List', 'wp-logout-location'); ?></a>
@@ -393,15 +394,21 @@ class WP_Logout_Location {
 							// General tab
 							require_once dirname(__FILE__) . '/tabs/general.php'; 
 						}
-					
-						// Hide save button for Logout history tab
-						if ('logout-history' !== $tab) : ?>
-							<tr>
-								<td colspan="4">
-									<input type="submit" name="submit" value="Save Changes" class="button button-primary" id="save_changes">
-								</td>
-							</tr>
-						<?php endif; ?>
+
+						if('logout-history' === $tab) {
+							$button_text = __('Clear History', 'wp-logout-location');
+						} else {
+							$button_text = __('Save Change', 'wp-logout-location');
+						}
+							
+						if( !in_array($tab, ['accesslist', 'logout-history']) || current_user_can('manage_options')) {
+							echo "<tr>";
+								echo "<td colspan='6'>";
+									echo "<input type='submit' name='submit' value='{$button_text}' class='button button-primary' id='save_changes'>";
+								echo "</td>";
+							echo "</tr>";
+						}
+						?>
 					</table>
 					<!-- Load ajax result -->
 					<span id="ajax_settings_result"></span>
@@ -442,49 +449,36 @@ class WP_Logout_Location {
 		$button_action    = isset($_POST['button_action']) ? sanitize_text_field($_POST['button_action']) : '';
 		$role_type        = isset($_POST['role_type']) ? sanitize_text_field($_POST['role_type']) : 0;
 
-		$any_role_will_redirect = isset($_POST['any_role_will_redirect']) ? sanitize_text_field($_POST['any_role_will_redirect']) : 0;
-		$get_any_role_redirect_to = isset($_POST['any_role_redirect_to']) ? (array) $_POST['any_role_redirect_to'] : [];
-
-		$any_role_redirect_to = [];
-		foreach ($get_any_role_redirect_to as $key => $value) {
-			$key = strtolower(sanitize_text_field($key));
-			$any_role_redirect_to[$key] = sanitize_text_field($value);
-		}
-
-		$get_multiple_role_will_redirect = isset($_POST['multiple_role_will_redirect']) ? $_POST['multiple_role_will_redirect'] : 0;
-		$multiple_role_will_redirect = [];
-		foreach ($get_multiple_role_will_redirect as $key => $value) {
-			$key = strtolower(sanitize_text_field($key));
-			$multiple_role_will_redirect[$key] = sanitize_text_field($value);
-		}
-
-		$get_multiple_role_redirect_to = isset($_POST['multiple_role_redirect_to']) ? (array) $_POST['multiple_role_redirect_to'] : 0;
-
-		$multiple_role_redirect_to = [];
-		foreach ($get_multiple_role_redirect_to as $key => $value) {
-			$key = strtolower(sanitize_text_field($key));
-			$value = array_map('sanitize_text_field', $value);
-			$multiple_role_redirect_to[$key] = $value;
-		}
-
 		if ('accesslist' === $button_for) {
+			// Only administrator can give access
+			if(!current_user_can('manage_options')) {
+				return;
+			}
 
 			$get_accesslists = isset($_POST['accesslist']) ? $_POST['accesslist'] : ''; 
 			$accesslist_escaped = [];
-			foreach($get_accesslists as $key => $accesslist) {
-				$value = array_map('sanitize_text_field', $accesslist);
-				$accesslist_escaped[] = $value;
+
+			if($get_accesslists) {
+				foreach($get_accesslists as $key => $accesslist) {
+					//var_dump($accesslist);
+					//$value = array_map('sanitize_text_field', $accesslist);
+					$key = sanitize_text_field($key);
+					$accesslist_escaped[$key] = (int) $accesslist;
+				}
 			}
+
 			$accesslist_escaped['administrator'] = 1;
 
-			$accesslist = [];
 			// Add new capability to the selected role including 'administrator' role
+			$accesslist = [];
 			foreach ($accesslist_escaped as $key => $value) {
 				$key = strtolower($key);
 				$accesslist[] = $key;
 				// Add wpll_caps to the selected role name
 				$role_object = get_role($key);
-				$role_object->add_cap('wpll_caps');
+				if($role_object){
+					$role_object->add_cap('wpll_caps');
+				}
 			}
 
 			$all_roles = get_editable_roles();
@@ -509,8 +503,40 @@ class WP_Logout_Location {
 				'message' => __('Settings Saved', 'wp-logout-location'),
 			));
 
+		} elseif('logout-history' === $button_for ) {
+			unset(self::$options['wpll_settings']['wpll_logout_history']);
+			update_option('wpll_settings', self::$options);
+			wp_send_json_success(array(
+				'message' => __('Settings Saved', 'wp-logout-location'),
+			));
+
 		} elseif ('general' === $button_for) {
 
+			$any_role_will_redirect = isset($_POST['any_role_will_redirect']) ? sanitize_text_field($_POST['any_role_will_redirect']) : 0;
+			$get_any_role_redirect_to = isset($_POST['any_role_redirect_to']) ? (array) $_POST['any_role_redirect_to'] : [];
+
+			$any_role_redirect_to = [];
+			foreach ($get_any_role_redirect_to as $key => $value) {
+				$key = strtolower(sanitize_text_field($key));
+				$any_role_redirect_to[$key] = sanitize_text_field($value);
+			}
+
+			$get_multiple_role_will_redirect = isset($_POST['multiple_role_will_redirect']) ? $_POST['multiple_role_will_redirect'] : [];
+			$multiple_role_will_redirect = [];
+			foreach ($get_multiple_role_will_redirect as $key => $value) {
+				$key = strtolower(sanitize_text_field($key));
+				$multiple_role_will_redirect[$key] = sanitize_text_field($value);
+			}
+
+			$get_multiple_role_redirect_to = isset($_POST['multiple_role_redirect_to']) ? (array) $_POST['multiple_role_redirect_to'] : [];
+
+			$multiple_role_redirect_to = [];
+			foreach ($get_multiple_role_redirect_to as $key => $value) {
+				$key = strtolower(sanitize_text_field($key));
+				$value = array_map('sanitize_text_field', $value);
+				$multiple_role_redirect_to[$key] = $value;
+			}
+			
 			if (empty($role_type)) {
 				wp_send_json_error(array(
 					'message' => __('Please select role type', 'wp-logout-location')
@@ -707,7 +733,7 @@ class WP_Logout_Location {
 		$multiple_role_will_redirect = isset($options['multiple_role_will_redirect']) ? $options['multiple_role_will_redirect'] : '';
 		$multiple_role_redirect_to = isset($options['multiple_role_redirect_to']) ? $options['multiple_role_redirect_to'] : '';
 
-		$wpll_logout_history = self::$options['wpll_settings']['wpll_logout_history'];
+		$wpll_logout_history = isset(self::$options['wpll_settings']['wpll_logout_history']) ? self::$options['wpll_settings']['wpll_logout_history'] : [];
 
 		// If user has no role
 		if (!in_array($user->roles[0], (array) $user->roles)) {

@@ -20,7 +20,8 @@ $total_roles = count($all_roles);
 ?>
 <tr>
     <td colspan="3">
-        <h4><?php _e('Choose roles and redirecting page', 'wp-logout-location'); ?></h4>
+        <h4><?php _e('General', 'wp-logout-location'); ?></h4>
+        <p class="description"><?php _e('Please choose role type and where to redirect after logout.', 'wp-logout-location'); ?></p>
     </td>
 </tr>
 <tr>
@@ -65,20 +66,24 @@ $total_roles = count($all_roles);
         </select>
     </td>
     <td class="redirect_to page_link">
-        <select name="any_role_redirect_to[page_link]">
-            <option value="">--<?php _e('Choose a page'); ?>--</option>
+        <select name="any_role_redirect_to[page_link]">            
             <?php
-            foreach ($all_pages as $page) {
-                $page_title = $page->post_title;
-                $page_name = $page->post_name;
-                $role_type_redirecting_page = isset($any_role) ? $any_role : '';
-                $selected = '';
-                if (isset($any_role_redirect_to['page_link'])) {
-                    if ($page_name == $any_role_redirect_to['page_link']) {
-                        $selected = 'selected';
+            if($all_pages) {
+                echo "<option value=''>".__('Please choose a page', 'wp-logout-location')."</option>";
+                foreach ($all_pages as $page) {
+                    $page_title = $page->post_title;
+                    $page_name = $page->post_name;
+                    $role_type_redirecting_page = isset($any_role) ? $any_role : '';
+                    $selected = '';
+                    if (isset($any_role_redirect_to['page_link'])) {
+                        if ($page_name == $any_role_redirect_to['page_link']) {
+                            $selected = 'selected';
+                        }
                     }
+                    echo "<option value='{$page_name}' {$selected}>{$page_title}</option>";
                 }
-                echo "<option value='{$page_name}' {$selected}>{$page_title}</option>";
+            } else {
+                echo "<option value=''>".__('No page found', 'wp-logout-location')."</option>";
             }
             ?>
         </select>
@@ -89,42 +94,50 @@ $total_roles = count($all_roles);
                                                                                                                                 } ?>">
     </td>
     <td class="redirect_to post_link">
-        <select name="any_role_redirect_to[post_link]">
-            <option value=""><?php _e('--Select Post--', 'wp-logout-location'); ?></option>
+        <select name="any_role_redirect_to[post_link]">            
             <?php
-            foreach ($this->get_all_posts() as $key => $value) {
-                $selected = '';
-                if (isset($any_role_redirect_to['post_link'])) {
-                    if ($value === $any_role_redirect_to['post_link']) {
-                        $selected = 'selected';
+            if($this->get_all_posts()) {
+                echo "<option value=''>".__('--Select a post--', 'wp-logout-location')."</option>";
+                foreach ($this->get_all_posts() as $key => $value) {
+                    $selected = '';
+                    if (isset($any_role_redirect_to['post_link'])) {
+                        if ($value === $any_role_redirect_to['post_link']) {
+                            $selected = 'selected';
+                        }
                     }
+                    echo "<option value='{$value}' {$selected}>{$key}</option>";
                 }
-                echo "<option value='{$value}' {$selected}>{$key}</option>";
-            }
+            } else {
+                echo "<option value=''>".__('No post found', 'wp-logout-location')."</option>";
+            }            
             ?>
         </select>
     </td>
     <td class="redirect_to custom_post_link">
-        <select name="any_role_redirect_to[custom_post_link]">
-            <option value=""><?php _e('--Select Custom Post--', 'wp-logout-location'); ?></option>
+        <select name="any_role_redirect_to[custom_post_link]">            
             <?php
-            foreach ($this->get_all_custom_posts() as $key => $value) {
-                $selected = '';
-                if (isset($any_role_redirect_to['custom_post_link'])) {
-                    if ($value === $any_role_redirect_to['custom_post_link']) {
-                        $selected = 'selected';
+            if($this->get_all_custom_posts()) {
+                echo "<option value=''>".__('--Select a custom post', 'wp-logout-location')."</option>";
+                foreach ($this->get_all_custom_posts() as $key => $value) {
+                    $selected = '';
+                    if (isset($any_role_redirect_to['custom_post_link'])) {
+                        if ($value === $any_role_redirect_to['custom_post_link']) {
+                            $selected = 'selected';
+                        }
                     }
+                    echo "<option value='{$value}' {$selected}>{$key}</option>";
                 }
-                echo "<option value='{$value}' {$selected}>{$key}</option>";
+            } else {
+                echo "<option value=''>".__('No custom post found', 'wp-logout-location')."</option>";
             }
             ?>
         </select>
     </td>
     <td class="redirect_to product_page_link">
-        <select name="any_role_redirect_to[product_page_link]">
-            <option value=""><?php _e('--Select Product--', 'wp-logout-location'); ?></option>
+        <select name="any_role_redirect_to[product_page_link]">            
             <?php
             if($this->get_all_products()) {
+                echo "<option value=''>".__('--Select product (Woocommerce)--', 'wp-logout-location')."</option>";
                 foreach ($this->get_all_products() as $key => $value) {
                     $selected = '';
                     if (isset($any_role_redirect_to['product_page_link'])) {
@@ -134,15 +147,17 @@ $total_roles = count($all_roles);
                     }
                     echo "<option value='{$value}' {$selected}>{$key}</option>";
                 }
+            } else {
+                echo "<option value=''>".__('No product (Woocommerce) found', 'wp-logout-location')."</option>";
             }
             ?>
         </select>
     </td>
     <td class="redirect_to user_profile_link">
-        <select name="any_role_redirect_to[user_profile_link]">
-            <option value=""><?php _e('--Select User--', 'wp-logout-location'); ?></option>
+        <select name="any_role_redirect_to[user_profile_link]">            
             <?php
             if ($this->get_all_users()) {
+                echo "<option value=''>" . __('--Select user--', 'wp-logout-location') . "</option>";
                 foreach ($this->get_all_users() as $key => $data) {
                     $display_name = $data->display_name;
                     $user_login = $data->user_login;
@@ -161,10 +176,10 @@ $total_roles = count($all_roles);
         </select>
     </td>
     <td class="redirect_to category_link">
-        <select name="any_role_redirect_to[category_link]">
-            <option value=""><?php _e('--Select Category--', 'wp-logout-location'); ?></option>
+        <select name="any_role_redirect_to[category_link]">            
             <?php
             if ($this->get_all_categories()) {
+                echo "<option value=''>" . __('--Select a category--', 'wp-logout-location') . "</option>";
                 foreach ($this->get_all_categories() as $key => $data) {
                     $category_id = $data->term_id;
                     $category_name = $data->name;
@@ -192,6 +207,7 @@ $total_roles = count($all_roles);
             <option value=""><?php _e('--Select Tag--', 'wp-logout-location'); ?></option>
             <?php
             if ($this->get_all_tags()) {
+                echo "<option value=''>" . __('--Select a tag--', 'wp-logout-location') . "</option>";
                 foreach ($this->get_all_tags() as $key => $data) {
                     $tag_id = $data->term_id;
                     $tag_name = $data->name;
@@ -235,22 +251,24 @@ foreach ($all_roles as $role) {
             </select>
         </td>
         <td class="redirect_to page_link">
-            <select class="multiple_roles_option" name="multiple_role_redirect_to[<?php echo $role_key; ?>][page_link]">
-                <option value="">--<?php _e('Choose a page'); ?>--</option>
+            <select class="multiple_roles_option" name="multiple_role_redirect_to[<?php echo $role_key; ?>][page_link]">                
                 <?php
-                foreach ($all_pages as $page) {
-                    $page_title = $page->post_title;
-                    $page_name = $page->post_name;
-                    $selected = '';
-
-                    if (isset($multiple_role_redirect_to[$role_key]['page_link'])) {
-                        if ($page_name === $multiple_role_redirect_to[$role_key]['page_link']) {
-                            $selected = 'selected';
-                        }
+                if($all_pages) {
+                    echo "<option value=''>" . __('--Select a page--', 'wp-logout-location') . "</option>";
+                    foreach ($all_pages as $page) {
+                        $page_title = $page->post_title;
+                        $page_name = $page->post_name;
+                        $selected = '';    
+                        if (isset($multiple_role_redirect_to[$role_key]['page_link'])) {
+                            if ($page_name === $multiple_role_redirect_to[$role_key]['page_link']) {
+                                $selected = 'selected';
+                            }
+                        }    
+                        echo "<option value='{$page_name}' {$selected}>{$page_title}</option>";
                     }
-
-                    echo "<option value='{$page_name}' {$selected}>{$page_title}</option>";
-                }
+                } else {
+                    echo "<option value=''>" . __('No page found', 'wp-logout-location') . "</option>";
+                }                
                 ?>
             </select>
         </td>
@@ -260,58 +278,70 @@ foreach ($all_roles as $role) {
                                                                                                                 } ?>" placeholder="<?php _e('Enter custom link', 'wp-logout-location'); ?>" class="regular-text">
         </td>
         <td class="redirect_to post_link">
-            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][post_link]">
-                <option value=""><?php _e('--Select Post--', 'wp-logout-location'); ?></option>
+            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][post_link]">                
                 <?php
-                foreach ($this->get_all_posts() as $key => $value) {
-                    $selected = '';
-                    if (isset($multiple_role_redirect_to[$role_key]['post_link'])) {
-                        if ($value === $multiple_role_redirect_to[$role_key]['post_link']) {
-                            $selected = 'selected';
+                if($this->get_all_posts()) {
+                    echo "<option value=''>" . __('--Select a post--', 'wp-logout-location') . "</option>";
+                    foreach ($this->get_all_posts() as $key => $value) {
+                        $selected = '';
+                        if (isset($multiple_role_redirect_to[$role_key]['post_link'])) {
+                            if ($value === $multiple_role_redirect_to[$role_key]['post_link']) {
+                                $selected = 'selected';
+                            }
                         }
+                        echo "<option value='{$value}' {$selected}>{$key}</option>";
                     }
-                    echo "<option value='{$value}' {$selected}>{$key}</option>";
+                } else {
+                    echo "<option value=''>" . __('No post found', 'wp-logout-location') . "</option>";
                 }
                 ?>
             </select>
         </td>
         <td class="redirect_to custom_post_link">
-            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][custom_post_link]">
-                <option value=""><?php _e('--Select Custom Post--', 'wp-logout-location'); ?></option>
+            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][custom_post_link]">                
                 <?php
-                foreach ($this->get_all_custom_posts() as $key => $value) {
-                    $selected = '';
-                    if (isset($multiple_role_redirect_to[$role_key]['custom_post_link'])) {
-                        if ($value === $multiple_role_redirect_to[$role_key]['custom_post_link']) {
-                            $selected = 'selected';
+                if($this->get_all_custom_posts()) {
+                    echo "<option value=''>" . __('--Select custom post', 'wp-logout-location') . "</option>";
+                    foreach ($this->get_all_custom_posts() as $key => $value) {
+                        $selected = '';
+                        if (isset($multiple_role_redirect_to[$role_key]['custom_post_link'])) {
+                            if ($value === $multiple_role_redirect_to[$role_key]['custom_post_link']) {
+                                $selected = 'selected';
+                            }
                         }
+                        echo "<option value='{$value}' {$selected}>{$key}</option>";
                     }
-                    echo "<option value='{$value}' {$selected}>{$key}</option>";
+                } else {
+                    echo "<option value=''>" . __('No custom post found', 'wp-logout-location') . "</option>";
                 }
                 ?>
             </select>
         </td>
         <td class="redirect_to product_page_link">
-            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][product_page_link]">
-                <option value=""><?php _e('--Select Product--', 'wp-logout-location'); ?></option>
+            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][product_page_link]">                
                 <?php
-                foreach ($this->get_all_products() as $key => $value) {
-                    $selected = '';
-                    if (isset($multiple_role_redirect_to[$role_key]['product_page_link'])) {
-                        if ($value === $multiple_role_redirect_to[$role_key]['product_page_link']) {
-                            $selected = 'selected';
+                if($this->get_all_products()) {
+                    echo "<option value=''>" . __('--Select a produt (Woocommerce)', 'wp-logout-location') . "</option>";
+                    foreach ($this->get_all_products() as $key => $value) {
+                        $selected = '';
+                        if (isset($multiple_role_redirect_to[$role_key]['product_page_link'])) {
+                            if ($value === $multiple_role_redirect_to[$role_key]['product_page_link']) {
+                                $selected = 'selected';
+                            }
                         }
+                        echo "<option value='{$value}' {$selected}>{$key}</option>";
                     }
-                    echo "<option value='{$value}' {$selected}>{$key}</option>";
+                } else {
+                    echo "<option value=''>" . __('No produt (Woocommerce) found', 'wp-logout-location') . "</option>";
                 }
                 ?>
             </select>
         </td>
         <td class="redirect_to user_profile_link">
-            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][user_profile_link]">
-                <option value=""><?php _e('--Select User--', 'wp-logout-location'); ?></option>
+            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][user_profile_link]">                
                 <?php
                 if ($this->get_all_users()) {
+                    echo "<option value=''>" . __('--Select a user', 'wp-logout-location') . "</option>";
                     foreach ($this->get_all_users() as $key => $data) {
                         $display_name = $data->display_name;
                         $user_login = $data->user_login;
@@ -330,10 +360,10 @@ foreach ($all_roles as $role) {
             </select>
         </td>
         <td class="redirect_to category_link">
-            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][category_link]">
-                <option value=""><?php _e('--Select Category--', 'wp-logout-location'); ?></option>
+            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][category_link]">                
                 <?php
                 if ($this->get_all_categories()) {
+                    echo "<option value=''>" . __('--Select a category', 'wp-logout-location') . "</option>";
                     foreach ($this->get_all_categories() as $key => $data) {
                         $category_id = $data->term_id;
                         $category_name = $data->name;
@@ -357,10 +387,10 @@ foreach ($all_roles as $role) {
             </select>
         </td>
         <td class="redirect_to tag_link">
-            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][tag_link]">
-                <option value=""><?php _e('--Select Tag--', 'wp-logout-location'); ?></option>
+            <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][tag_link]">                
                 <?php
                 if ($this->get_all_tags()) {
+                    echo "<option value=''>" . __('--Select a tag', 'wp-logout-location') . "</option>";
                     foreach ($this->get_all_tags() as $key => $data) {
                         $tag_id = $data->term_id;
                         $tag_name = $data->name;

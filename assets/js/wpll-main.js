@@ -43,7 +43,9 @@
         $redirectTo = $('.redirect_to');
 
     // For existing db values for any roles
-    $('.' + $chooseRoleType.val()).show();
+    if ($chooseRoleType.val()) {
+        $('.' + $chooseRoleType.val()).show();
+    }
 
     // For existing db values for any multiple rolesroles
     $whereToRedirect.each(function() {
