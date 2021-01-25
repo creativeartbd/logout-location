@@ -165,18 +165,43 @@ class WP_Logout_Location
 		}
 	}
 
+
 	/**
-	 * Get all post type
+	 * Get all custom post types
 	 *
 	 * @return array
 	 */
-	public function get_all_custom_posts()
+	public function get_all_custom_post_types()
 	{
 		$args = array(
 			'public'   => true,
 			'_builtin' => false,
 		);
 		$post_types = get_post_types($args);
+		if ($post_types) {
+			$all_post_types = [];
+			foreach ($post_types  as $post_type) {
+				$all_post_types[$post_type] = $post_type;
+			}
+			return $all_post_types;
+		}
+		return [];
+	}
+
+
+	/**
+	 * Get all custom post
+	 *
+	 * @return array
+	 */
+	public function get_all_custom_posts()
+	{
+		
+		$post_types = $this->get_all_custom_post_types();
+		// If WooCommerce is install and activated then remove it
+		if (defined('WC_VERSION')) {
+			unset($post_types['product']);
+		}		
 
 		if ($post_types) {
 			$all_post_type = [];
@@ -200,7 +225,6 @@ class WP_Logout_Location
 				return $all_posts_link;
 			}
 			return [];
-
 		}
 		return [];
 	}
@@ -233,22 +257,6 @@ class WP_Logout_Location
 
 
 	/**
-	 * Get all Users
-	 *
-	 * @return array
-	 */
-	public function get_all_users()
-	{
-		$all_users = get_users([
-			'fields' => ['display_name', 'user_login']
-		]);
-		if ($all_users) {
-			return $all_users;
-		}
-		return [];
-	}
-
-	/**
 	 * Get all Categories
 	 *
 	 * @return array
@@ -256,16 +264,24 @@ class WP_Logout_Location
 	public function get_all_categories()
 	{
 
-		$all_posts = $this->get_all_custom_posts();
-		$all_posts[] = 'post';
-		$all_taxonomy = get_object_taxonomies($all_posts);
+		$all_post_types = $this->get_all_custom_post_types();	
+		$all_post_types['post'] = 'post';
+
+		$removed_tags = [];
+		foreach($all_post_types as $post_type){
+			$removed_tags[] = $post_type.'_tag';
+		}			
+
+		$all_taxonomy = get_object_taxonomies($all_post_types, 'names');
+		// Because we need to show only category not tag
+		$all_taxonomy = array_diff($all_taxonomy, $removed_tags);
 
 		if ($all_taxonomy) {
 			$args = array(
 				'taxonomy' => $all_taxonomy,
 				'orderby' => 'name',
 				'order'   => 'ASC',
-				'hide_empty' => false,
+				'hide_empty' => false,				
 			);
 			$all_categories = get_categories($args);
 			if ($all_categories) {
@@ -283,17 +299,49 @@ class WP_Logout_Location
 	 */
 	public function get_all_tags()
 	{
+
+		$all_post_types = $this->get_all_custom_post_types();	
+		$all_post_types['post'] = 'post';
+
+		$all_terms = [];
+		foreach($all_post_types as $post_type){
+			$generate_terms = $post_type.'_tag';
+			if(taxonomy_exists($generate_terms)){
+				$all_terms[] = $generate_terms; 
+			}
+		}
 		$args = array(
+			'taxonomy' => $all_terms,
 			'orderby' => 'name',
 			'order'   => 'ASC',
 			'hide_empty' => false,
 		);
+
 		$all_tags = get_tags($args);
+		
 		if ($all_tags) {
 			return $all_tags;
 		}
 		return [];
 	}
+
+	/**
+	 * Get all Users
+	 *
+	 * @return array
+	 */
+	public function get_all_users()
+	{
+		$all_users = get_users([
+			'fields' => ['display_name', 'user_login']
+		]);
+		if ($all_users) {
+			return $all_users;
+		}
+		return [];
+	}
+
+	
 
 	/**
 	 * Get all posts
@@ -304,7 +352,7 @@ class WP_Logout_Location
 	{
 		// For woocommerce
 		$data = array(
-			'post_type' => 'products',
+			'post_type' => 'product',
 			'post_status' => 'publish',
 			'posts_per_page' => -1
 		);
@@ -342,6 +390,9 @@ class WP_Logout_Location
 			$tab = 'general';
 		}
 
+		echo '<pre>';
+			print_r($this->get_all_products());
+		echo '</pre>';
 ?>
 		<div class="wrap">
 			<h1><img src="<?php echo $this->plugin_url . 'assets/img/wp-logout-location-logo.png'; ?>" alt="WP Logout Location" class="wpll-logo"></h1>
@@ -526,7 +577,7 @@ class WP_Logout_Location
 					} elseif('product_page_link' == $any_role_will_redirect) {
 						if (empty($any_role_redirect_to['product_page_link'])) {
 							wp_send_json_error(array(
-								'message' => __('Choose a product page', 'wp-logout-location')
+								'message' => __('Choose a product', 'wp-logout-location')
 							));
 						}
 					} elseif('user_profile_link' == $any_role_will_redirect) {
@@ -600,7 +651,7 @@ class WP_Logout_Location
 						} elseif('product_page_link' == $any_role_will_redirect) {
 							if (empty($any_role_redirect_to['product_page_link'])) {
 								wp_send_json_error(array(
-									'message' => __('Choose a product page', 'wp-logout-location')
+									'message' => __('Choose a product', 'wp-logout-location')
 								));
 							}
 						} elseif('user_profile_link' == $any_role_will_redirect) {
@@ -699,6 +750,18 @@ class WP_Logout_Location
 				wp_redirect($any_role_redirect_to['custom_link']);
 			} elseif ('post_link' == $any_role_will_redirect) {
 				wp_redirect($any_role_redirect_to['post_link']);
+			} elseif ('custom_post_link' == $any_role_will_redirect) {
+				wp_redirect($any_role_redirect_to['custom_post_link']);
+			} elseif ('product_page_link' == $any_role_will_redirect) {
+				wp_redirect($any_role_redirect_to['product_page_link']);
+			} elseif ('user_profile_link' == $any_role_will_redirect) {
+				wp_redirect( site_url('/author/').$any_role_redirect_to['user_profile_link']);
+			} elseif ('category_link' == $any_role_will_redirect) {
+				wp_redirect( $any_role_redirect_to['category_link']);
+			} elseif ('tag_link' == $any_role_will_redirect) {
+				wp_redirect( $any_role_redirect_to['tag_link']);
+			} else {
+				wp_redirect(site_url('/'));
 			}
 		} elseif ('multiple_roles' == $options['role_type']) {
 			// Get current user role
@@ -714,6 +777,26 @@ class WP_Logout_Location
 			} elseif ('post_link' == $multiple_role_will_redirect[$current_user_role]) {
 				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
 					wp_redirect($multiple_role_redirect_to[$current_user_role]['post_link']);
+				}
+			} elseif ('custom_post_link' == $multiple_role_will_redirect[$current_user_role]) {
+				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
+					wp_redirect($multiple_role_redirect_to[$current_user_role]['custom_post_link']);
+				}
+			} elseif ('product_page_link' == $multiple_role_will_redirect[$current_user_role]) {
+				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
+					wp_redirect($multiple_role_redirect_to[$current_user_role]['product_page_link']);
+				}
+			} elseif ('user_profile_link' == $multiple_role_will_redirect[$current_user_role]) {
+				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
+					wp_redirect(site_url('/author/').$multiple_role_redirect_to[$current_user_role]['user_profile_link']);
+				}
+			} elseif ('category_link' == $multiple_role_will_redirect[$current_user_role]) {
+				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
+					wp_redirect($multiple_role_redirect_to[$current_user_role]['category_link']);
+				}
+			} elseif ('tag_link' == $multiple_role_will_redirect[$current_user_role]) {
+				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
+					wp_redirect($multiple_role_redirect_to[$current_user_role]['tag_link']);
 				}
 			} else {
 				wp_redirect(site_url('/'));

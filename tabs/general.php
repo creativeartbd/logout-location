@@ -62,7 +62,7 @@ $total_roles = count($all_roles);
             <option value="custom_link" <?php if ('custom_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Custom Link', 'wp-logout-location'); ?></option>
             <option value="post_link" <?php if ('post_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Post', 'wp-logout-location'); ?></option>
             <option value="custom_post_link" <?php if ('custom_post_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Custom Post', 'wp-logout-location'); ?></option>
-            <option value="product_page_link" <?php if ('product_page_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Product Page(WooCommerce)', 'wp-logout-location'); ?></option>
+            <option value="product_page_link" <?php if ('product_page_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Product (WooCommerce)', 'wp-logout-location'); ?></option>
             <option value="user_profile_link" <?php if ('user_profile_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('User Profile', 'wp-logout-location'); ?></option>
             <option value="category_link" <?php if ('category_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Category Page', 'wp-logout-location'); ?></option>
             <option value="tag_link" <?php if ('tag_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Tag Page', 'wp-logout-location'); ?></option>
@@ -170,15 +170,20 @@ $total_roles = count($all_roles);
             <?php
             if ($this->get_all_categories()) {
                 foreach ($this->get_all_categories() as $key => $data) {
+                    $category_id = $data->term_id;
                     $category_name = $data->name;
-                    $category_slug = $data->slug;
+                    $category_slug = get_term_link($category_id) ;
                     $selected = '';
                     if (isset($any_role_redirect_to['category_link'])) {
                         if ($category_slug == $any_role_redirect_to['category_link']) {
                             $selected = 'selected';
                         }
                     }
-                    echo "<option value='{$category_slug}' {$selected}>{$category_name}</option>";
+                    // Remove the query string
+                    if(!strpos($category_slug, '?') !== false){
+                        $category_slug = $category_slug;
+                        echo "<option value='{$category_slug}' {$selected}>{$category_name}</option>";
+                    }
                 }
             } else {
                 echo "<option value=''>" . __('No category found', 'wp-logout-location') . "</option>";
@@ -192,8 +197,10 @@ $total_roles = count($all_roles);
             <?php
             if ($this->get_all_tags()) {
                 foreach ($this->get_all_tags() as $key => $data) {
+                    $tag_id = $data->term_id;
                     $tag_name = $data->name;
                     $tag_slug = $data->slug;
+                    $tag_slug = get_term_link($tag_id);
                     $selected = '';
                     if (isset($any_role_redirect_to['tag_link'])) {
                         if ($tag_slug == $any_role_redirect_to['tag_link']) {
@@ -225,7 +232,7 @@ foreach ($all_roles as $role) {
                 <option value="custom_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'custom_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Custom Link', 'wp-logout-location'); ?></option>
                 <option value="post_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'post_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Post', 'wp-logout-location'); ?></option>
                 <option value="custom_post_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'custom_post_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Custom Post', 'wp-logout-location'); ?></option>
-                <option value="product_page_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'product_page_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Product Page(WooCommerce)', 'wp-logout-location'); ?></option>
+                <option value="product_page_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'product_page_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Product (WooCommerce)', 'wp-logout-location'); ?></option>
                 <option value="user_profile_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'user_profile_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('User Profile', 'wp-logout-location'); ?></option>
                 <option value="category_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'category_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Category Page', 'wp-logout-location'); ?></option>
                 <option value="tag_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'tag_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Tag Page', 'wp-logout-location'); ?></option>
@@ -292,7 +299,7 @@ foreach ($all_roles as $role) {
             <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][product_page_link]">
                 <option value=""><?php _e('--Select Product--', 'wp-logout-location'); ?></option>
                 <?php
-                foreach ($this->get_all_posts() as $key => $value) {
+                foreach ($this->get_all_products() as $key => $value) {
                     $selected = '';
                     if (isset($multiple_role_redirect_to[$role_key]['product_page_link'])) {
                         if ($value == $multiple_role_redirect_to[$role_key]['product_page_link']) {
@@ -313,8 +320,8 @@ foreach ($all_roles as $role) {
                         $display_name = $data->display_name;
                         $user_login = $data->user_login;
                         $selected = '';
-                        if (isset($any_role_redirect_to['user_profile_link'])) {
-                            if ($user_login == $any_role_redirect_to['user_profile_link']) {
+                        if (isset($multiple_role_redirect_to[$role_key]['user_profile_link'])) {
+                            if ($user_login == $multiple_role_redirect_to[$role_key]['user_profile_link']) {
                                 $selected = 'selected';
                             }
                         }
@@ -332,15 +339,20 @@ foreach ($all_roles as $role) {
                 <?php
                 if ($this->get_all_categories()) {
                     foreach ($this->get_all_categories() as $key => $data) {
+                        $category_id = $data->term_id;
                         $category_name = $data->name;
-                        $category_slug = $data->slug;
+                        $category_slug = get_term_link($category_id) ;
                         $selected = '';
-                        if (isset($any_role_redirect_to['category_link'])) {
-                            if ($category_slug == $any_role_redirect_to['category_link']) {
+                        if (isset($multiple_role_redirect_to[$role_key]['category_link'])) {
+                            if ($category_slug == $multiple_role_redirect_to[$role_key]['category_link']) {
                                 $selected = 'selected';
                             }
                         }
-                        echo "<option value='{$category_slug}' {$selected}>{$category_name}</option>";
+                        // Remove the query string
+                        if(!strpos($category_slug, '?') !== false){
+                            $category_slug = $category_slug;
+                            echo "<option value='{$category_slug}' {$selected}>{$category_name}</option>";
+                        }
                     }
                 } else {
                     echo "<option value=''>" . __('No category found', 'wp-logout-location') . "</option>";
@@ -354,11 +366,13 @@ foreach ($all_roles as $role) {
                 <?php
                 if ($this->get_all_tags()) {
                     foreach ($this->get_all_tags() as $key => $data) {
+                        $tag_id = $data->term_id;
                         $tag_name = $data->name;
                         $tag_slug = $data->slug;
+                        $tag_slug = get_term_link($tag_id);
                         $selected = '';
-                        if (isset($any_role_redirect_to['tag_link'])) {
-                            if ($tag_slug == $any_role_redirect_to['tag_link']) {
+                        if (isset($multiple_role_redirect_to[$role_key]['tag_link'])) {
+                            if ($tag_slug == $multiple_role_redirect_to[$role_key]['tag_link']) {
                                 $selected = 'selected';
                             }
                         }

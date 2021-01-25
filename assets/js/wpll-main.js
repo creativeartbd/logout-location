@@ -36,25 +36,25 @@
         return false;
     });
 
-    // =============
-    // For Role tab
-    // =============
-
+    // Declare variable
     var $choose_role_type = $('.choose_role_type'),
         $role_list = $('.role_list'),
         $where_to_redirect = $('.where_to_redirect'),
-        $redirect_to = $('.redirect_to'),
-        $selected_role_type = $choose_role_type.val(),
-        $selected_where_to_redirect = $where_to_redirect.val();
+        $redirect_to = $('.redirect_to');
 
-    // For existing db values
+    // For existing db values for any roles
     $('.' + $choose_role_type.val()).show();
-    $('.' + $where_to_redirect.val()).show();
 
-    console.log($where_to_redirect.val());
+    // For existing db values for any multiple rolesroles
+    $where_to_redirect.each(function() {
+        if ($(this).val()) {
+            var $that = $('.' + $(this).val());
+            var value = '.' + $(this).val();
+            $(this).parents('tr').find($that).show().not(value).hide();
+        }
+    });
 
-    // For existing db values end here
-
+    // On any roles change
     $choose_role_type.on('change', function() {
         var value = $(this).val();
         if (value) {
@@ -63,6 +63,7 @@
         }
     });
 
+    // On multiple roles change
     $where_to_redirect.on('change', function() {
         var value = $(this).val();
         if (value) {
