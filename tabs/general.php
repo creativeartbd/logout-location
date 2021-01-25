@@ -6,10 +6,6 @@ if (!defined('ABSPATH')) {
 }
 
 $options   = self::$options['wpll_settings']['wpll_general_settings'];
-
-echo '<pre>';
-    print_r($options);
-echo '</pre>';
 $role_type = $options['role_type'];
 
 $any_role_will_redirect = isset($options['any_role_will_redirect']) ? $options['any_role_will_redirect']: [];
@@ -58,14 +54,14 @@ $total_roles = count($all_roles);
     <td>
         <select name="any_role_will_redirect" class="where_to_redirect">
             <option value="">--<?php _e('Choose where to redirect'); ?>--</option>
-            <option value="page_link" <?php if ('page_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Page', 'wp-logout-location'); ?></option>
-            <option value="custom_link" <?php if ('custom_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Custom Link', 'wp-logout-location'); ?></option>
-            <option value="post_link" <?php if ('post_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Post', 'wp-logout-location'); ?></option>
-            <option value="custom_post_link" <?php if ('custom_post_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Custom Post', 'wp-logout-location'); ?></option>
-            <option value="product_page_link" <?php if ('product_page_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Product (WooCommerce)', 'wp-logout-location'); ?></option>
-            <option value="user_profile_link" <?php if ('user_profile_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('User Profile', 'wp-logout-location'); ?></option>
-            <option value="category_link" <?php if ('category_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Category Page', 'wp-logout-location'); ?></option>
-            <option value="tag_link" <?php if ('tag_link' == $any_role_will_redirect) echo 'selected'; ?>><?php _e('Tag Page', 'wp-logout-location'); ?></option>
+            <option value="page_link" <?php if ('page_link' === $any_role_will_redirect) echo 'selected'; ?>><?php _e('Page', 'wp-logout-location'); ?></option>
+            <option value="custom_link" <?php if ('custom_link' === $any_role_will_redirect) echo 'selected'; ?>><?php _e('Custom Link', 'wp-logout-location'); ?></option>
+            <option value="post_link" <?php if ('post_link' === $any_role_will_redirect) echo 'selected'; ?>><?php _e('Post', 'wp-logout-location'); ?></option>
+            <option value="custom_post_link" <?php if ('custom_post_link' === $any_role_will_redirect) echo 'selected'; ?>><?php _e('Custom Post', 'wp-logout-location'); ?></option>
+            <option value="product_page_link" <?php if ('product_page_link' === $any_role_will_redirect) echo 'selected'; ?>><?php _e('Product (WooCommerce)', 'wp-logout-location'); ?></option>
+            <option value="user_profile_link" <?php if ('user_profile_link' === $any_role_will_redirect) echo 'selected'; ?>><?php _e('User Profile', 'wp-logout-location'); ?></option>
+            <option value="category_link" <?php if ('category_link' === $any_role_will_redirect) echo 'selected'; ?>><?php _e('Category Page', 'wp-logout-location'); ?></option>
+            <option value="tag_link" <?php if ('tag_link' === $any_role_will_redirect) echo 'selected'; ?>><?php _e('Tag Page', 'wp-logout-location'); ?></option>
         </select>
     </td>
     <td class="redirect_to page_link">
@@ -88,7 +84,7 @@ $total_roles = count($all_roles);
         </select>
     </td>
     <td class="redirect_to custom_link">
-        <input type="text" name="any_role_redirect_to[custom_link]" placeholder="Enter custom link" class="regular-text" value="<?php if ('custom_link' == $any_role_will_redirect) {
+        <input type="text" name="any_role_redirect_to[custom_link]" placeholder="<?php _e('Enter custom link', 'wp-logout-location'); ?>" class="regular-text" value="<?php if ('custom_link' === $any_role_will_redirect) {
                                                                                                                                     echo $any_role_redirect_to['custom_link'];
                                                                                                                                 } ?>">
     </td>
@@ -99,7 +95,7 @@ $total_roles = count($all_roles);
             foreach ($this->get_all_posts() as $key => $value) {
                 $selected = '';
                 if (isset($any_role_redirect_to['post_link'])) {
-                    if ($value == $any_role_redirect_to['post_link']) {
+                    if ($value === $any_role_redirect_to['post_link']) {
                         $selected = 'selected';
                     }
                 }
@@ -115,7 +111,7 @@ $total_roles = count($all_roles);
             foreach ($this->get_all_custom_posts() as $key => $value) {
                 $selected = '';
                 if (isset($any_role_redirect_to['custom_post_link'])) {
-                    if ($value == $any_role_redirect_to['custom_post_link']) {
+                    if ($value === $any_role_redirect_to['custom_post_link']) {
                         $selected = 'selected';
                     }
                 }
@@ -132,7 +128,7 @@ $total_roles = count($all_roles);
                 foreach ($this->get_all_products() as $key => $value) {
                     $selected = '';
                     if (isset($any_role_redirect_to['product_page_link'])) {
-                        if ($value == $any_role_redirect_to['product_page_link']) {
+                        if ($value === $any_role_redirect_to['product_page_link']) {
                             $selected = 'selected';
                         }
                     }
@@ -152,7 +148,7 @@ $total_roles = count($all_roles);
                     $user_login = $data->user_login;
                     $selected = '';
                     if (isset($any_role_redirect_to['user_profile_link'])) {
-                        if ($user_login == $any_role_redirect_to['user_profile_link']) {
+                        if ($user_login === $any_role_redirect_to['user_profile_link']) {
                             $selected = 'selected';
                         }
                     }
@@ -175,7 +171,7 @@ $total_roles = count($all_roles);
                     $category_slug = get_term_link($category_id) ;
                     $selected = '';
                     if (isset($any_role_redirect_to['category_link'])) {
-                        if ($category_slug == $any_role_redirect_to['category_link']) {
+                        if ($category_slug === $any_role_redirect_to['category_link']) {
                             $selected = 'selected';
                         }
                     }
@@ -203,7 +199,7 @@ $total_roles = count($all_roles);
                     $tag_slug = get_term_link($tag_id);
                     $selected = '';
                     if (isset($any_role_redirect_to['tag_link'])) {
-                        if ($tag_slug == $any_role_redirect_to['tag_link']) {
+                        if ($tag_slug === $any_role_redirect_to['tag_link']) {
                             $selected = 'selected';
                         }
                     }
@@ -228,14 +224,14 @@ foreach ($all_roles as $role) {
         <td>
             <select name="multiple_role_will_redirect[<?php echo $role_key; ?>]" class="where_to_redirect">
                 <option value="">--<?php _e('Choose where to redirect'); ?>--</option>
-                <option value="page_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'page_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Page', 'wp-logout-location'); ?></option>
-                <option value="custom_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'custom_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Custom Link', 'wp-logout-location'); ?></option>
+                <option value="page_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'page_link' === $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Page', 'wp-logout-location'); ?></option>
+                <option value="custom_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'custom_link' === $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Custom Link', 'wp-logout-location'); ?></option>
                 <option value="post_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'post_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Post', 'wp-logout-location'); ?></option>
-                <option value="custom_post_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'custom_post_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Custom Post', 'wp-logout-location'); ?></option>
-                <option value="product_page_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'product_page_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Product (WooCommerce)', 'wp-logout-location'); ?></option>
-                <option value="user_profile_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'user_profile_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('User Profile', 'wp-logout-location'); ?></option>
-                <option value="category_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'category_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Category Page', 'wp-logout-location'); ?></option>
-                <option value="tag_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'tag_link' == $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Tag Page', 'wp-logout-location'); ?></option>
+                <option value="custom_post_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'custom_post_link' === $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Custom Post', 'wp-logout-location'); ?></option>
+                <option value="product_page_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'product_page_link' === $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Product (WooCommerce)', 'wp-logout-location'); ?></option>
+                <option value="user_profile_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'user_profile_link' === $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('User Profile', 'wp-logout-location'); ?></option>
+                <option value="category_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'category_link' === $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Category Page', 'wp-logout-location'); ?></option>
+                <option value="tag_link" <?php if (isset($multiple_role_will_redirect[$role_key]) && 'tag_link' === $multiple_role_will_redirect[$role_key]) echo 'selected'; ?>><?php _e('Tag Page', 'wp-logout-location'); ?></option>
             </select>
         </td>
         <td class="redirect_to page_link">
@@ -248,7 +244,7 @@ foreach ($all_roles as $role) {
                     $selected = '';
 
                     if (isset($multiple_role_redirect_to[$role_key]['page_link'])) {
-                        if ($page_name == $multiple_role_redirect_to[$role_key]['page_link']) {
+                        if ($page_name === $multiple_role_redirect_to[$role_key]['page_link']) {
                             $selected = 'selected';
                         }
                     }
@@ -259,9 +255,9 @@ foreach ($all_roles as $role) {
             </select>
         </td>
         <td class="redirect_to custom_link">
-            <input type="text" name="multiple_role_redirect_to[<?php echo $role_key ?>][custom_link]" value="<?php if (2 == $role_type) {
+            <input type="text" name="multiple_role_redirect_to[<?php echo $role_key ?>][custom_link]" value="<?php if ( 'multiple_roles' === $role_type) {
                                                                                                                     echo isset($multiple_role_redirect_to[$role_key]['custom_link']) ? $multiple_role_redirect_to[$role_key]['custom_link'] : '';
-                                                                                                                } ?>" placeholder="Enter custom link" class="regular-text">
+                                                                                                                } ?>" placeholder="<?php _e('Enter custom link', 'wp-logout-location'); ?>" class="regular-text">
         </td>
         <td class="redirect_to post_link">
             <select name="multiple_role_redirect_to[<?php echo $role_key; ?>][post_link]">
@@ -270,7 +266,7 @@ foreach ($all_roles as $role) {
                 foreach ($this->get_all_posts() as $key => $value) {
                     $selected = '';
                     if (isset($multiple_role_redirect_to[$role_key]['post_link'])) {
-                        if ($value == $multiple_role_redirect_to[$role_key]['post_link']) {
+                        if ($value === $multiple_role_redirect_to[$role_key]['post_link']) {
                             $selected = 'selected';
                         }
                     }
@@ -286,7 +282,7 @@ foreach ($all_roles as $role) {
                 foreach ($this->get_all_custom_posts() as $key => $value) {
                     $selected = '';
                     if (isset($multiple_role_redirect_to[$role_key]['custom_post_link'])) {
-                        if ($value == $multiple_role_redirect_to[$role_key]['custom_post_link']) {
+                        if ($value === $multiple_role_redirect_to[$role_key]['custom_post_link']) {
                             $selected = 'selected';
                         }
                     }
@@ -302,7 +298,7 @@ foreach ($all_roles as $role) {
                 foreach ($this->get_all_products() as $key => $value) {
                     $selected = '';
                     if (isset($multiple_role_redirect_to[$role_key]['product_page_link'])) {
-                        if ($value == $multiple_role_redirect_to[$role_key]['product_page_link']) {
+                        if ($value === $multiple_role_redirect_to[$role_key]['product_page_link']) {
                             $selected = 'selected';
                         }
                     }
@@ -321,7 +317,7 @@ foreach ($all_roles as $role) {
                         $user_login = $data->user_login;
                         $selected = '';
                         if (isset($multiple_role_redirect_to[$role_key]['user_profile_link'])) {
-                            if ($user_login == $multiple_role_redirect_to[$role_key]['user_profile_link']) {
+                            if ($user_login === $multiple_role_redirect_to[$role_key]['user_profile_link']) {
                                 $selected = 'selected';
                             }
                         }
@@ -344,7 +340,7 @@ foreach ($all_roles as $role) {
                         $category_slug = get_term_link($category_id) ;
                         $selected = '';
                         if (isset($multiple_role_redirect_to[$role_key]['category_link'])) {
-                            if ($category_slug == $multiple_role_redirect_to[$role_key]['category_link']) {
+                            if ($category_slug === $multiple_role_redirect_to[$role_key]['category_link']) {
                                 $selected = 'selected';
                             }
                         }
@@ -372,7 +368,7 @@ foreach ($all_roles as $role) {
                         $tag_slug = get_term_link($tag_id);
                         $selected = '';
                         if (isset($multiple_role_redirect_to[$role_key]['tag_link'])) {
-                            if ($tag_slug == $multiple_role_redirect_to[$role_key]['tag_link']) {
+                            if ($tag_slug === $multiple_role_redirect_to[$role_key]['tag_link']) {
                                 $selected = 'selected';
                             }
                         }

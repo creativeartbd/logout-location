@@ -15,8 +15,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Start up the engine
-class WP_Logout_Location
-{
+class WP_Logout_Location {
 
 	private static $instance = null;
 	protected $version = 0;
@@ -30,9 +29,8 @@ class WP_Logout_Location
 	 *
 	 * @return WP_Logout_location
 	 */
-	public static function getInstance()
-	{
-		if (false == is_a(self::$instance, 'WP_Logout_Location')) {
+	public static function getInstance() {
+		if (false === is_a(self::$instance, 'WP_Logout_Location')) {
 			self::$instance = new WP_Logout_Location();
 		}
 		return self::$instance;
@@ -43,8 +41,7 @@ class WP_Logout_Location
 	 *
 	 * @return void
 	 */
-	protected function __construct()
-	{
+	protected function __construct() {
 		$this->version = $this->plugin_version();
 		$this->plugin_url = plugin_dir_url(__FILE__);
 		$this->plugin_basename = plugin_basename(__FILE__);
@@ -66,8 +63,7 @@ class WP_Logout_Location
 	 *
 	 * @return void
 	 */
-	public function wpll_add_caps_to_administrator()
-	{
+	public function wpll_add_caps_to_administrator() {
 		$role = get_role('administrator');
 		$role->add_cap('wpll_caps');
 	}
@@ -77,8 +73,7 @@ class WP_Logout_Location
 	 *
 	 * @return void
 	 */
-	public static function activate()
-	{
+	public static function activate() {
 		$default_options = [];
 		$default_options['wpll_settings'] = [
 			'wpll_accesslist' => [],
@@ -97,8 +92,7 @@ class WP_Logout_Location
 	 *
 	 * @return string
 	 */
-	public function plugin_version()
-	{
+	public function plugin_version() {
 		$plugin_data = get_file_data(__FILE__, array('version' => 'Version'), 'plugin');
 		return $plugin_data['version'];
 	}
@@ -108,8 +102,7 @@ class WP_Logout_Location
 	 *
 	 * @return array
 	 */
-	protected function load_all_options()
-	{
+	protected function load_all_options() {
 		return self::$options = get_option('wpll_settings');
 	}
 
@@ -118,8 +111,7 @@ class WP_Logout_Location
 	 *
 	 * @return void
 	 */
-	public function admin_menu()
-	{
+	public function admin_menu() {
 		add_options_page(__('WP Logout Location', 'wp-logout-location'), __('WP Logout Location', 'wp-logout-location'), 'wpll_caps', 'wp-logout-location', [$this, 'plugin_page']);
 	}
 
@@ -128,8 +120,7 @@ class WP_Logout_Location
 	 *
 	 * @return void
 	 */
-	public function load_textdomain()
-	{
+	public function load_textdomain() {
 		load_plugin_textdomain('wp-logout-location');
 	}
 
@@ -138,8 +129,7 @@ class WP_Logout_Location
 	 *
 	 * @return void
 	 */
-	public function admin_scripts()
-	{
+	public function admin_scripts() {
 		wp_enqueue_style('wpll-admin', $this->plugin_url . 'assets/css/wpll-admin.css', null, $this->version, 'all');
 		wp_enqueue_script('wpll-main-js', $this->plugin_url . 'assets/js/wpll-main.js', ['jquery'], $this->version, true);
 		wp_localize_script('wpll-main-js', 'wpll', [
@@ -155,8 +145,7 @@ class WP_Logout_Location
 	 *
 	 * @return bool
 	 */
-	public function is_plugin_page()
-	{
+	public function is_plugin_page() {
 		$current_screen = get_current_screen();
 		if ($current_screen->id === 'settings_page_wp-logout-location') {
 			return true;
@@ -171,8 +160,7 @@ class WP_Logout_Location
 	 *
 	 * @return array
 	 */
-	public function get_all_custom_post_types()
-	{
+	public function get_all_custom_post_types() {
 		$args = array(
 			'public'   => true,
 			'_builtin' => false,
@@ -194,8 +182,7 @@ class WP_Logout_Location
 	 *
 	 * @return array
 	 */
-	public function get_all_custom_posts()
-	{
+	public function get_all_custom_posts() {
 		
 		$post_types = $this->get_all_custom_post_types();
 		// If WooCommerce is install and activated then remove it
@@ -234,8 +221,7 @@ class WP_Logout_Location
 	 *
 	 * @return array
 	 */
-	public function get_all_posts()
-	{
+	public function get_all_posts() {
 
 		$data = array(
 			'post_type' => 'post',
@@ -261,8 +247,7 @@ class WP_Logout_Location
 	 *
 	 * @return array
 	 */
-	public function get_all_categories()
-	{
+	public function get_all_categories() {
 
 		$all_post_types = $this->get_all_custom_post_types();	
 		$all_post_types['post'] = 'post';
@@ -297,8 +282,7 @@ class WP_Logout_Location
 	 *
 	 * @return array
 	 */
-	public function get_all_tags()
-	{
+	public function get_all_tags() {
 
 		$all_post_types = $this->get_all_custom_post_types();	
 		$all_post_types['post'] = 'post';
@@ -330,8 +314,7 @@ class WP_Logout_Location
 	 *
 	 * @return array
 	 */
-	public function get_all_users()
-	{
+	public function get_all_users() {
 		$all_users = get_users([
 			'fields' => ['display_name', 'user_login']
 		]);
@@ -348,8 +331,7 @@ class WP_Logout_Location
 	 *
 	 * @return array
 	 */
-	public function get_all_products()
-	{
+	public function get_all_products() {
 		// For woocommerce
 		$data = array(
 			'post_type' => 'product',
@@ -376,11 +358,11 @@ class WP_Logout_Location
 	 *
 	 * @return string
 	 */
-	public function plugin_page()
-	{
+	public function plugin_page() {
 
-		if (!current_user_can('wpll_caps'))
+		if (!current_user_can('wpll_caps')) {
 			wp_die(__('Sorry, you are not allowed to access this page.', 'wp-logout-location'));
+		}	
 
 		$tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : '';
 
@@ -389,26 +371,22 @@ class WP_Logout_Location
 		} else {
 			$tab = 'general';
 		}
-
-		echo '<pre>';
-			print_r($this->get_all_products());
-		echo '</pre>';
-?>
+	?>
 		<div class="wrap">
-			<h1><img src="<?php echo $this->plugin_url . 'assets/img/wp-logout-location-logo.png'; ?>" alt="WP Logout Location" class="wpll-logo"></h1>
+			<h1 class="wpll-logo"><img src="<?php echo $this->plugin_url . 'assets/img/wp-logout-location-logo.png'; ?>" alt="WP Logout Location" class="wpll-logo"></h1>
 			<div class="nav-tab-wrapper wpll-tab">
-				<a href="<?php echo admin_url('options-general.php?page=wp-logout-location&tab=general'); ?>" class="nav-tab <?php if ('general' == $tab) echo 'nav-tab-active'; ?>"><?php _e('General', 'wp-logout-location'); ?></a>
-				<a href="<?php echo admin_url('options-general.php?page=wp-logout-location&tab=accesslist'); ?>" class="nav-tab <?php if ('accesslist' == $tab) echo 'nav-tab-active'; ?>"><?php _e('Access List', 'wp-logout-location'); ?></a>
-				<a href="<?php echo admin_url('options-general.php?page=wp-logout-location&tab=logout-history'); ?>" class="nav-tab <?php if ('logout-history' == $tab) echo 'nav-tab-active'; ?>"><?php _e('Logout History', 'wp-logout-location') ?></a>
+				<a href="<?php echo admin_url('options-general.php?page=wp-logout-location&tab=general'); ?>" class="nav-tab <?php if ('general' === $tab) echo 'nav-tab-active'; ?>"><?php _e('General', 'wp-logout-location'); ?></a>
+				<a href="<?php echo admin_url('options-general.php?page=wp-logout-location&tab=accesslist'); ?>" class="nav-tab <?php if ('accesslist' === $tab) echo 'nav-tab-active'; ?>"><?php _e('Access List', 'wp-logout-location'); ?></a>
+				<a href="<?php echo admin_url('options-general.php?page=wp-logout-location&tab=logout-history'); ?>" class="nav-tab <?php if ('logout-history' === $tab) echo 'nav-tab-active'; ?>"><?php _e('Logout History', 'wp-logout-location') ?></a>
 			</div>
 			<div class="wpll-container tab-content">
 				<form action="" id="wpll_settings">
 					<table class="form-table widefat striped wpll-table">
 						<?php 
-						if('accesslist' == $tab) {
+						if('accesslist' === $tab) {
 							// Accesslist tab
 							require_once dirname(__FILE__) . '/tabs/access-list.php';
-						} elseif('logout-history' == $tab) {
+						} elseif('logout-history' === $tab) {
 							// Logout history tab
 							require_once dirname(__FILE__) . '/tabs/logout-history.php';
 						} else {
@@ -417,7 +395,7 @@ class WP_Logout_Location
 						}
 					
 						// Hide save button for Logout history tab
-						if ('logout-history' != $tab) : ?>
+						if ('logout-history' !== $tab) : ?>
 							<tr>
 								<td colspan="4">
 									<input type="submit" name="submit" value="Save Changes" class="button button-primary" id="save_changes">
@@ -440,8 +418,7 @@ class WP_Logout_Location
 	 * @return bool
 	 */
 
-	public function is_url($uri)
-	{
+	public function is_url($uri) {
 		if (preg_match('/^(http|https):\\/\\/[a-z0-9_]+([\\-\\.]{1}[a-z_0-9]+)*\\.[_a-z]{2,5}' . '((:[0-9]{1,5})?\\/.*)?$/i', $uri)) {
 			return true;
 		} else {
@@ -455,8 +432,7 @@ class WP_Logout_Location
 	 * @return string
 	 */
 
-	public function wpll_settings_ajax()
-	{
+	public function wpll_settings_ajax() {
 
 		// Check nonce first
 		check_ajax_referer('nonce_settings_action');
@@ -487,19 +463,24 @@ class WP_Logout_Location
 		$multiple_role_redirect_to = [];
 		foreach ($get_multiple_role_redirect_to as $key => $value) {
 			$key = strtolower(sanitize_text_field($key));
-			$value = array_map('esc_attr', $value);
+			$value = array_map('sanitize_text_field', $value);
 			$multiple_role_redirect_to[$key] = $value;
 		}
 
-		if ('accesslist' == $button_for) {
+		if ('accesslist' === $button_for) {
 
-			$get_accesslist = isset($_POST['accesslist']) ? $_POST['accesslist'] : '';
-			$get_accesslist['administrator'] = 1;
+			$get_accesslists = isset($_POST['accesslist']) ? $_POST['accesslist'] : ''; 
+			$accesslist_escaped = [];
+			foreach($get_accesslists as $key => $accesslist) {
+				$value = array_map('sanitize_text_field', $accesslist);
+				$accesslist_escaped[] = $value;
+			}
+			$accesslist_escaped['administrator'] = 1;
+
 			$accesslist = [];
-
 			// Add new capability to the selected role including 'administrator' role
-			foreach ($get_accesslist as $key => $value) {
-				$key = sanitize_text_field(strtolower($key));
+			foreach ($accesslist_escaped as $key => $value) {
+				$key = strtolower($key);
 				$accesslist[] = $key;
 				// Add wpll_caps to the selected role name
 				$role_object = get_role($key);
@@ -528,7 +509,7 @@ class WP_Logout_Location
 				'message' => __('Settings Saved', 'wp-logout-location'),
 			));
 
-		} elseif ('general' == $button_for) {
+		} elseif ('general' === $button_for) {
 
 			if (empty($role_type)) {
 				wp_send_json_error(array(
@@ -539,7 +520,7 @@ class WP_Logout_Location
 				wp_send_json_error(array(
 					'message' => __('Wrong parameter given', 'wp-logout-location')
 				));
-			} elseif ('any_roles' == $role_type) {
+			} elseif ('any_roles' === $role_type) {
 
 				if (empty($any_role_will_redirect)) {
 					wp_send_json_error(array(
@@ -610,17 +591,9 @@ class WP_Logout_Location
 					}
 				}
 
-				$data['any_role_redirect_to'] = [
-					'page_link'	=> $any_role_redirect_to['page_link'],
-					'custom_link' => $any_role_redirect_to['custom_link'],
-					'post_link' => $any_role_redirect_to['post_link'],
-					'custom_post_link' => $any_role_redirect_to['custom_post_link'],
-					'product_page_link' => $any_role_redirect_to['product_page_link'],
-					'user_profile_link' => $any_role_redirect_to['user_profile_link'],
-					'category_link' => $any_role_redirect_to['category_link'],
-					'tag_link' => $any_role_redirect_to['tag_link'],
-				];
-			} elseif ('multiple_roles' == $role_type) {
+				$data['any_role_redirect_to'] = $any_role_redirect_to;
+
+			} elseif ('multiple_roles' === $role_type) {
 
 				if (!array_filter($multiple_role_will_redirect)) {
 					wp_send_json_error(array(
@@ -723,8 +696,7 @@ class WP_Logout_Location
 	 * @return null
 	 */
 
-	public function logout_redirect_to()
-	{
+	public function logout_redirect_to() {
 
 		$user = $this->current_user;
 		$options = self::$options['wpll_settings']['wpll_general_settings'];
@@ -743,58 +715,58 @@ class WP_Logout_Location
 			exit();
 		}
 
-		if ('any_roles' == $options['role_type']) {
-			if ('page_link' == $any_role_will_redirect) {
+		if ('any_roles' === $options['role_type']) {
+			if ('page_link' === $any_role_will_redirect) {
 				wp_redirect($any_role_redirect_to['page_link']);
-			} elseif ('custom_link' == $any_role_will_redirect) {
+			} elseif ('custom_link' === $any_role_will_redirect) {
 				wp_redirect($any_role_redirect_to['custom_link']);
-			} elseif ('post_link' == $any_role_will_redirect) {
+			} elseif ('post_link' === $any_role_will_redirect) {
 				wp_redirect($any_role_redirect_to['post_link']);
-			} elseif ('custom_post_link' == $any_role_will_redirect) {
+			} elseif ('custom_post_link' === $any_role_will_redirect) {
 				wp_redirect($any_role_redirect_to['custom_post_link']);
-			} elseif ('product_page_link' == $any_role_will_redirect) {
+			} elseif ('product_page_link' === $any_role_will_redirect) {
 				wp_redirect($any_role_redirect_to['product_page_link']);
-			} elseif ('user_profile_link' == $any_role_will_redirect) {
+			} elseif ('user_profile_link' === $any_role_will_redirect) {
 				wp_redirect( site_url('/author/').$any_role_redirect_to['user_profile_link']);
-			} elseif ('category_link' == $any_role_will_redirect) {
+			} elseif ('category_link' === $any_role_will_redirect) {
 				wp_redirect( $any_role_redirect_to['category_link']);
-			} elseif ('tag_link' == $any_role_will_redirect) {
+			} elseif ('tag_link' === $any_role_will_redirect) {
 				wp_redirect( $any_role_redirect_to['tag_link']);
 			} else {
 				wp_redirect(site_url('/'));
 			}
-		} elseif ('multiple_roles' == $options['role_type']) {
+		} elseif ('multiple_roles' === $options['role_type']) {
 			// Get current user role
 			$current_user_role = strtolower($user->roles[0]);
-			if ('page_link' == $multiple_role_will_redirect[$current_user_role]) {
+			if ('page_link' === $multiple_role_will_redirect[$current_user_role]) {
 				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
 					wp_redirect(site_url("/" . $multiple_role_redirect_to[$current_user_role]['page_link']));
 				}
-			} elseif ('custom_link' == $multiple_role_will_redirect[$current_user_role]) {
+			} elseif ('custom_link' === $multiple_role_will_redirect[$current_user_role]) {
 				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
 					wp_redirect($multiple_role_redirect_to[$current_user_role]['custom_link']);
 				}
-			} elseif ('post_link' == $multiple_role_will_redirect[$current_user_role]) {
+			} elseif ('post_link' === $multiple_role_will_redirect[$current_user_role]) {
 				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
 					wp_redirect($multiple_role_redirect_to[$current_user_role]['post_link']);
 				}
-			} elseif ('custom_post_link' == $multiple_role_will_redirect[$current_user_role]) {
+			} elseif ('custom_post_link' === $multiple_role_will_redirect[$current_user_role]) {
 				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
 					wp_redirect($multiple_role_redirect_to[$current_user_role]['custom_post_link']);
 				}
-			} elseif ('product_page_link' == $multiple_role_will_redirect[$current_user_role]) {
+			} elseif ('product_page_link' === $multiple_role_will_redirect[$current_user_role]) {
 				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
 					wp_redirect($multiple_role_redirect_to[$current_user_role]['product_page_link']);
 				}
-			} elseif ('user_profile_link' == $multiple_role_will_redirect[$current_user_role]) {
+			} elseif ('user_profile_link' === $multiple_role_will_redirect[$current_user_role]) {
 				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
 					wp_redirect(site_url('/author/').$multiple_role_redirect_to[$current_user_role]['user_profile_link']);
 				}
-			} elseif ('category_link' == $multiple_role_will_redirect[$current_user_role]) {
+			} elseif ('category_link' === $multiple_role_will_redirect[$current_user_role]) {
 				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
 					wp_redirect($multiple_role_redirect_to[$current_user_role]['category_link']);
 				}
-			} elseif ('tag_link' == $multiple_role_will_redirect[$current_user_role]) {
+			} elseif ('tag_link' === $multiple_role_will_redirect[$current_user_role]) {
 				if (array_key_exists($current_user_role, $multiple_role_redirect_to)) {
 					wp_redirect($multiple_role_redirect_to[$current_user_role]['tag_link']);
 				}
@@ -820,8 +792,7 @@ class WP_Logout_Location
 	 *
 	 * @return null
 	 */
-	public function uninstall()
-	{
+	public function uninstall() {
 		delete_option('wpll_settings');
 	}
 } // end class

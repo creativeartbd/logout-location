@@ -4,7 +4,7 @@
     box-shadow: -1px 2px 31px #ddd;
 }
 
-img.wpll-logo {
+.wpll-logo img {
     margin-top: 10px;
 }
 
@@ -51,16 +51,16 @@ h1.nav-tab-wrapper {
     border-bottom: 1px dashed #ddd;
 }
 
-.form-table td {
+.wpll-container .form-table td {
     padding: 20px;
 }
 
-.form-table th {
+.wpll-container .form-table th {
     padding-left: 15px;
 }
 
 @media screen and (max-width: 782px) {
-    .form-table td {
+    .wpll-container .form-table td {
         padding-left: 10px;
     }
 }
@@ -71,16 +71,7 @@ td>input[type="checkbox"] {
     margin-bottom: 5px;
 }
 
-a.nav-tab.pro_link {
-    background-color: #37acff;
-    color: #fff;
-}
-
-.pro_color {
-    color: red;
-}
-
-input#save_changes {
+.wpll-container input#save_changes {
     background-color: #0095ff;
     box-shadow: none;
     border: none;
@@ -90,15 +81,7 @@ input#save_changes {
     height: 30px;
 }
 
-.valid_license {
-    color: green;
-}
-
-.invalid_license {
-    color: red;
-}
-
-.any_roles,
+.wpll-container .any_roles,
 .multiple_roles {
     display: none;
 }
@@ -107,7 +90,7 @@ input#save_changes {
     margin-bottom: 20px;
 }
 
-#ajax_settings_result .updated,
+.wpll-container #ajax_settings_result .updated,
 #ajax_settings_result .error,
 .wpll-warning {
     padding: 10px;
@@ -117,11 +100,11 @@ input#save_changes {
     border-bottom: 0;
 }
 
-#ajax_settings_result .updated {
+.wpll-container #ajax_settings_result .updated {
     background-color: #f2ffeb;
 }
 
-#ajax_settings_result .error {
+.wpll-container #ajax_settings_result .error {
     background-color: #ffecec;
 }
 
@@ -129,7 +112,7 @@ input#save_changes {
     background-color: #fff9ec;
 }
 
-.general_table_heading,
+.wpll-container .general_table_heading,
 .role_list,
 .redirect_to {
     display: none;
