@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP Logout Location
 Plugin URI: https://themechum.com/
-Description: Redirect to your desire location after logout.
+Description: Choose where to redirect after logout from your WordPress website.
 Version: 1.0
 Author: ThemeChum
 Author URI: https://www.themechum.com/
@@ -45,17 +45,24 @@ class WP_Logout_Location {
 		$this->version = $this->plugin_version();
 		$this->plugin_url = plugin_dir_url(__FILE__);
 		$this->plugin_basename = plugin_basename(__FILE__);
-		$this->load_all_options();
-		// Because at this point we don't have any user information
-		require(ABSPATH . WPINC . '/pluggable.php');
-		$this->current_user =  wp_get_current_user();
-
+		$this->load_all_options();		
+		add_action('init', [$this, 'set_current_user']);
 		add_action('admin_init', [$this, 'wpll_add_caps_to_administrator']);
 		add_action('admin_menu', [$this, 'admin_menu']);
 		add_action('admin_enqueue_scripts', [$this, 'admin_scripts']);
 		add_action('plugins_loaded', [$this, 'load_textdomain']);
 		add_action('wp_logout', [$this, 'logout_redirect_to']);
 		add_action('wp_ajax_nonce_settings_action', [$this, 'wpll_settings_ajax']);
+	}
+
+	/**
+	 * Set current user
+	 *
+	 * @return void
+	 */
+
+	public function set_current_user() {
+		$this->current_user =  wp_get_current_user();
 	}
 
 	/**
