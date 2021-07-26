@@ -71,9 +71,8 @@ $total_roles = count($all_roles);
             if($all_pages) {
                 echo "<option value=''>".__('Please choose a page', 'wp-logout-location')."</option>";
                 foreach ($all_pages as $page) {
-                    $page_title = $page->post_title;
-                    $page_name = $page->post_name;
-                    $role_type_redirecting_page = isset($any_role) ? $any_role : '';
+                    $page_title = esc_html($page->post_title);
+                    $page_name = esc_html($page->post_name);
                     $selected = '';
                     if (isset($any_role_redirect_to['page_link'])) {
                         if ($page_name == $any_role_redirect_to['page_link']) {
@@ -159,8 +158,8 @@ $total_roles = count($all_roles);
             if ($this->get_all_users()) {
                 echo "<option value=''>" . __('--Select user--', 'wp-logout-location') . "</option>";
                 foreach ($this->get_all_users() as $key => $data) {
-                    $display_name = $data->display_name;
-                    $user_login = $data->user_login;
+                    $display_name = esc_html($data->display_name);
+                    $user_login = esc_html($data->user_login);
                     $selected = '';
                     if (isset($any_role_redirect_to['user_profile_link'])) {
                         if ($user_login === $any_role_redirect_to['user_profile_link']) {
@@ -181,8 +180,8 @@ $total_roles = count($all_roles);
             if ($this->get_all_categories()) {
                 echo "<option value=''>" . __('--Select a category--', 'wp-logout-location') . "</option>";
                 foreach ($this->get_all_categories() as $key => $data) {
-                    $category_id = $data->term_id;
-                    $category_name = $data->name;
+                    $category_id = (int) $data->term_id;
+                    $category_name = esc_html($data->name);
                     $category_slug = get_term_link($category_id) ;
                     $selected = '';
                     if (isset($any_role_redirect_to['category_link'])) {
@@ -209,9 +208,9 @@ $total_roles = count($all_roles);
             if ($this->get_all_tags()) {
                 echo "<option value=''>" . __('--Select a tag--', 'wp-logout-location') . "</option>";
                 foreach ($this->get_all_tags() as $key => $data) {
-                    $tag_id = $data->term_id;
-                    $tag_name = $data->name;
-                    $tag_slug = $data->slug;
+                    $tag_id = (int) $data->term_id;
+                    $tag_name = esc_html($data->name);
+                    $tag_slug = esc_html($data->slug);
                     $tag_slug = get_term_link($tag_id);
                     $selected = '';
                     if (isset($any_role_redirect_to['tag_link'])) {
@@ -256,8 +255,8 @@ foreach ($all_roles as $role) {
                 if($all_pages) {
                     echo "<option value=''>" . __('--Select a page--', 'wp-logout-location') . "</option>";
                     foreach ($all_pages as $page) {
-                        $page_title = $page->post_title;
-                        $page_name = $page->post_name;
+                        $page_title = esc_html($page->post_title);
+                        $page_name = esc_html($page->post_name);
                         $selected = '';    
                         if (isset($multiple_role_redirect_to[$role_key]['page_link'])) {
                             if ($page_name === $multiple_role_redirect_to[$role_key]['page_link']) {
@@ -343,8 +342,8 @@ foreach ($all_roles as $role) {
                 if ($this->get_all_users()) {
                     echo "<option value=''>" . __('--Select a user', 'wp-logout-location') . "</option>";
                     foreach ($this->get_all_users() as $key => $data) {
-                        $display_name = $data->display_name;
-                        $user_login = $data->user_login;
+                        $display_name = esc_html($data->display_name);
+                        $user_login = esc_html($data->user_login);
                         $selected = '';
                         if (isset($multiple_role_redirect_to[$role_key]['user_profile_link'])) {
                             if ($user_login === $multiple_role_redirect_to[$role_key]['user_profile_link']) {
@@ -365,8 +364,8 @@ foreach ($all_roles as $role) {
                 if ($this->get_all_categories()) {
                     echo "<option value=''>" . __('--Select a category', 'wp-logout-location') . "</option>";
                     foreach ($this->get_all_categories() as $key => $data) {
-                        $category_id = $data->term_id;
-                        $category_name = $data->name;
+                        $category_id = (int) $data->term_id;
+                        $category_name = esc_html($data->name);
                         $category_slug = get_term_link($category_id) ;
                         $selected = '';
                         if (isset($multiple_role_redirect_to[$role_key]['category_link'])) {
@@ -392,9 +391,9 @@ foreach ($all_roles as $role) {
                 if ($this->get_all_tags()) {
                     echo "<option value=''>" . __('--Select a tag', 'wp-logout-location') . "</option>";
                     foreach ($this->get_all_tags() as $key => $data) {
-                        $tag_id = $data->term_id;
-                        $tag_name = $data->name;
-                        $tag_slug = $data->slug;
+                        $tag_id = (int) $data->term_id;
+                        $tag_name = esc_html($data->name);
+                        $tag_slug = esc_html($data->slug);
                         $tag_slug = get_term_link($tag_id);
                         $selected = '';
                         if (isset($multiple_role_redirect_to[$role_key]['tag_link'])) {

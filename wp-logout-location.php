@@ -1,21 +1,21 @@
 <?php
 /*
-Plugin Name: WP Logout Location
+Plugin Name: Logout Location
 Plugin URI: https://themechum.com/
 Description: Choose where to redirect after logout from your WordPress website.
 Version: 1.0
 Author: ThemeChum
 Author URI: https://www.themechum.com/
-Text Domain: wp-logout-location
+Text Domain: logout-location
 */
 
 // include only file
 if (!defined('ABSPATH')) {
-	wp_die(__('Do not open this file directly.', 'wp-logout-location'));
+	wp_die(__('Do not open this file directly.', 'logout-location'));
 }
 
 // Start up the engine
-class WP_Logout_Location {
+class Logout_Location {
 
 	private static $instance = null;
 	protected $version = 0;
@@ -27,11 +27,11 @@ class WP_Logout_Location {
 	/**
 	 * If an instance exists, then return it, Otherwise create one and return it.
 	 *
-	 * @return WP_Logout_location
+	 * @return Logout_Location
 	 */
 	public static function getInstance() {
-		if (false === is_a(self::$instance, 'WP_Logout_Location')) {
-			self::$instance = new WP_Logout_Location();
+		if (false === is_a(self::$instance, 'Logout_Location')) {
+			self::$instance = new Logout_Location();
 		}
 		return self::$instance;
 	}
@@ -119,7 +119,7 @@ class WP_Logout_Location {
 	 * @return void
 	 */
 	public function admin_menu() {
-		add_options_page(__('WP Logout Location', 'wp-logout-location'), __('WP Logout Location', 'wp-logout-location'), 'wpll_caps', 'wp-logout-location', [$this, 'plugin_page']);
+		add_options_page(__('Logout Location', 'logout-location'), __('Logout Location', 'logout-location'), 'wpll_caps', 'logout-location', [$this, 'plugin_page']);
 	}
 
 	/**
@@ -128,7 +128,7 @@ class WP_Logout_Location {
 	 * @return void
 	 */
 	public function load_textdomain() {
-		load_plugin_textdomain('wp-logout-location');
+		load_plugin_textdomain('logout-location');
 	}
 
 	/**
@@ -141,20 +141,20 @@ class WP_Logout_Location {
 		wp_enqueue_script('wpll-main-js', $this->plugin_url . 'assets/js/wpll-main.js', ['jquery'], $this->version, true);
 		wp_localize_script('wpll-main-js', 'wpll', [
 			'ajaxurl' => admin_url('admin-ajax.php'),
-			'saving' => __('Saving. Please wait ...', 'wp-logout-location'),
-			'save_success' => __('Settings saved.', 'wp-logout-location'),
+			'saving' => __('Saving. Please wait ...', 'logout-location'),
+			'save_success' => __('Settings saved.', 'logout-location'),
 			'nonce_settings' => wp_create_nonce('nonce_settings_action'),
 		]);
 	}
 
 	/**
-	 * If we are on the WP Logout Location plugin page
+	 * If we are on the Logout Location plugin page
 	 *
 	 * @return bool
 	 */
 	public function is_plugin_page() {
 		$current_screen = get_current_screen();
-		if ($current_screen->id === 'settings_page_wp-logout-location') {
+		if ($current_screen->id === 'settings_page_logout-location') {
 			return true;
 		} else {
 			return false;
@@ -361,14 +361,14 @@ class WP_Logout_Location {
 	
 
 	/**
-	 * WP Logout Location admin page
+	 * Logout Location admin page
 	 *
 	 * @return string
 	 */
 	public function plugin_page() {
 
 		if (!current_user_can('wpll_caps')) {
-			wp_die(__('Sorry, you are not allowed to access this page.', 'wp-logout-location'));
+			wp_die(__('Sorry, you are not allowed to access this page.', 'logout-location'));
 		}	
 
 		$tab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : '';
@@ -378,14 +378,15 @@ class WP_Logout_Location {
 		} else {
 			$tab = 'general';
 		}
+
 	?>
 		<div class="wrap">
-			<h1 class="wpll-logo"><img src="<?php echo $this->plugin_url . 'assets/img/wp-logout-location-logo.png'; ?>" alt="WP Logout Location" class="wpll-logo"></h1>
-			<p class="wpll-intro-text"><?php _e('Easy way to choose where to redirect after logout from your WordPress dashboard. You can choose any WordPress role or custom role to redirect your desire location. You can redirect to WordPres page, post, custom post, product(Woocommerce), category, tag, custom link, user page.', 'wp-logout-location'); ?></p>
+			<h1 class="wpll-logo"><img src="<?php echo $this->plugin_url . 'assets/img/logout-location-text-logo.png'; ?>" alt="Logout Location" class="wpll-logo"></h1>
+			<p class="wpll-intro-text"><?php _e('Easy way to choose where to redirect after logout from your WordPress dashboard. You can choose any WordPress role or custom role to redirect your desire location. You can redirect to the WordPress page, post, custom post, product(Woocommerce), category, tag, custom link, user page.', 'logout-location'); ?></p>
 			<div class="nav-tab-wrapper wpll-tab">
-				<a href="<?php echo admin_url('options-general.php?page=wp-logout-location&tab=general'); ?>" class="nav-tab <?php if ('general' === $tab) echo 'nav-tab-active'; ?>"><?php _e('General', 'wp-logout-location'); ?></a>
-				<a href="<?php echo admin_url('options-general.php?page=wp-logout-location&tab=accesslist'); ?>" class="nav-tab <?php if ('accesslist' === $tab) echo 'nav-tab-active'; ?>"><?php _e('Access List', 'wp-logout-location'); ?></a>
-				<a href="<?php echo admin_url('options-general.php?page=wp-logout-location&tab=logout-history'); ?>" class="nav-tab <?php if ('logout-history' === $tab) echo 'nav-tab-active'; ?>"><?php _e('Logout History', 'wp-logout-location') ?></a>
+				<a href="<?php echo admin_url('options-general.php?page=logout-location&tab=general'); ?>" class="nav-tab <?php if ('general' === $tab) echo 'nav-tab-active'; ?>"><?php _e('General', 'logout-location'); ?></a>
+				<a href="<?php echo admin_url('options-general.php?page=logout-location&tab=accesslist'); ?>" class="nav-tab <?php if ('accesslist' === $tab) echo 'nav-tab-active'; ?>"><?php _e('Access List', 'logout-location'); ?></a>
+				<a href="<?php echo admin_url('options-general.php?page=logout-location&tab=logout-history'); ?>" class="nav-tab <?php if ('logout-history' === $tab) echo 'nav-tab-active'; ?>"><?php _e('Logout History', 'logout-location') ?></a>
 			</div>
 			<div class="wpll-container tab-content">
 				<form action="" id="wpll_settings">
@@ -403,9 +404,9 @@ class WP_Logout_Location {
 						}
 
 						if('logout-history' === $tab) {
-							$button_text = __('Clear History', 'wp-logout-location');
+							$button_text = __('Clear History', 'logout-location');
 						} else {
-							$button_text = __('Save Change', 'wp-logout-location');
+							$button_text = __('Save Change', 'logout-location');
 						}
 							
 						if( !in_array($tab, ['accesslist', 'logout-history']) || current_user_can('manage_options')) {
@@ -507,14 +508,14 @@ class WP_Logout_Location {
 			self::$options['wpll_settings']['wpll_accesslist'] = $accesslist;
 			update_option('wpll_settings', self::$options);
 			wp_send_json_success(array(
-				'message' => __('Settings Saved', 'wp-logout-location'),
+				'message' => __('Settings Saved', 'logout-location'),
 			));
 
 		} elseif('logout-history' === $button_for ) {
 			unset(self::$options['wpll_settings']['wpll_logout_history']);
 			update_option('wpll_settings', self::$options);
 			wp_send_json_success(array(
-				'message' => __('Settings Saved', 'wp-logout-location'),
+				'message' => __('Settings Saved', 'logout-location'),
 			));
 
 		} elseif ('general' === $button_for) {
@@ -546,70 +547,70 @@ class WP_Logout_Location {
 			
 			if (empty($role_type)) {
 				wp_send_json_error(array(
-					'message' => __('Please select role type', 'wp-logout-location')
+					'message' => __('Please select role type', 'logout-location')
 				));
 			} elseif (!in_array($role_type, ['any_roles', 'multiple_roles'])) {
 
 				wp_send_json_error(array(
-					'message' => __('Wrong parameter given', 'wp-logout-location')
+					'message' => __('Wrong parameter given', 'logout-location')
 				));
 			} elseif ('any_roles' === $role_type) {
 
 				if (empty($any_role_will_redirect)) {
 					wp_send_json_error(array(
-						'message' => __('Choose where to redirect', 'wp-logout-location')
+						'message' => __('Choose where to redirect', 'logout-location')
 					));
 				} else {
 					if ('page_link' == $any_role_will_redirect) {
 						if (empty($any_role_redirect_to['page_link'])) {
 							wp_send_json_error(array(
-								'message' => __('Choose a page', 'wp-logout-location')
+								'message' => __('Choose a page', 'logout-location')
 							));
 						}
 					} elseif ('custom_link' == $any_role_will_redirect) {
 						if (empty($any_role_redirect_to['custom_link'])) {
 							wp_send_json_error(array(
-								'message' => __('Choose a custom link', 'wp-logout-location')
+								'message' => __('Choose a custom link', 'logout-location')
 							));
 						} elseif (false === $this->is_url($any_role_redirect_to['custom_link'])) {
 							wp_send_json_error(array(
-								'message' => __('invalid custom link', 'wp-logout-location')
+								'message' => __('invalid custom link', 'logout-location')
 							));
 						}
 					} elseif ('post_link' == $any_role_will_redirect) {
 						if (empty($any_role_redirect_to['post_link'])) {
 							wp_send_json_error(array(
-								'message' => __('Choose a post link', 'wp-logout-location')
+								'message' => __('Choose a post link', 'logout-location')
 							));
 						}
 					} elseif('custom_post_link' == $any_role_will_redirect) {
 						if (empty($any_role_redirect_to['custom_post_link'])) {
 							wp_send_json_error(array(
-								'message' => __('Choose a custom post link', 'wp-logout-location')
+								'message' => __('Choose a custom post link', 'logout-location')
 							));
 						}
 					} elseif('product_page_link' == $any_role_will_redirect) {
 						if (empty($any_role_redirect_to['product_page_link'])) {
 							wp_send_json_error(array(
-								'message' => __('Choose a product', 'wp-logout-location')
+								'message' => __('Choose a product', 'logout-location')
 							));
 						}
 					} elseif('user_profile_link' == $any_role_will_redirect) {
 						if (empty($any_role_redirect_to['user_profile_link'])) {
 							wp_send_json_error(array(
-								'message' => __('Choose a user name', 'wp-logout-location')
+								'message' => __('Choose a user name', 'logout-location')
 							));
 						}
 					} elseif('category_link' == $any_role_will_redirect) {
 						if (empty($any_role_redirect_to['category_link'])) {
 							wp_send_json_error(array(
-								'message' => __('Choose a category name', 'wp-logout-location')
+								'message' => __('Choose a category name', 'logout-location')
 							));
 						}
 					} elseif('tag_link' == $any_role_will_redirect) {
 						if (empty($any_role_redirect_to['tag_link'])) {
 							wp_send_json_error(array(
-								'message' => __('Choose a tag name', 'wp-logout-location')
+								'message' => __('Choose a tag name', 'logout-location')
 							));
 						}
 					}
@@ -630,7 +631,7 @@ class WP_Logout_Location {
 
 				if (!array_filter($multiple_role_will_redirect)) {
 					wp_send_json_error(array(
-						'message' => __('Choose where to redirect', 'wp-logout-location')
+						'message' => __('Choose where to redirect', 'logout-location')
 					));
 				}
 
@@ -638,44 +639,44 @@ class WP_Logout_Location {
 					if (!empty($multiple_role_will_redirect[$key]) && empty($multiple_role_redirect_to[$key][$value])) {
 						if ('page_link' == $multiple_role_will_redirect[$key]) {
 							wp_send_json_error(array(
-								'message' => __('Please select a page', 'wp-logout-location')
+								'message' => __('Please select a page', 'logout-location')
 							));
 						} elseif ('custom_link' == $multiple_role_will_redirect[$key]) {
 							wp_send_json_error(array(
-								'message' => __('Please select a custom link', 'wp-logout-location')
+								'message' => __('Please select a custom link', 'logout-location')
 							));
 						} elseif ('post_link' == $multiple_role_will_redirect[$key]) {
 							wp_send_json_error(array(
-								'message' => __('Please a post link', 'wp-logout-location')
+								'message' => __('Please a post link', 'logout-location')
 							));
 						} elseif('custom_post_link' == $any_role_will_redirect) {
 							if (empty($any_role_redirect_to['custom_post_link'])) {
 								wp_send_json_error(array(
-									'message' => __('Choose a custom post link', 'wp-logout-location')
+									'message' => __('Choose a custom post link', 'logout-location')
 								));
 							}
 						} elseif('product_page_link' == $any_role_will_redirect) {
 							if (empty($any_role_redirect_to['product_page_link'])) {
 								wp_send_json_error(array(
-									'message' => __('Choose a product', 'wp-logout-location')
+									'message' => __('Choose a product', 'logout-location')
 								));
 							}
 						} elseif('user_profile_link' == $any_role_will_redirect) {
 							if (empty($any_role_redirect_to['user_profile_link'])) {
 								wp_send_json_error(array(
-									'message' => __('Choose a user name', 'wp-logout-location')
+									'message' => __('Choose a user name', 'logout-location')
 								));
 							}
 						} elseif('category_link' == $any_role_will_redirect) {
 							if (empty($any_role_redirect_to['category_link'])) {
 								wp_send_json_error(array(
-									'message' => __('Choose a category name', 'wp-logout-location')
+									'message' => __('Choose a category name', 'logout-location')
 								));
 							}
 						} elseif('tag_link' == $any_role_will_redirect) {
 							if (empty($any_role_redirect_to['tag_link'])) {
 								wp_send_json_error(array(
-									'message' => __('Choose a tag name', 'wp-logout-location')
+									'message' => __('Choose a tag name', 'logout-location')
 								));
 							}
 						}
@@ -702,7 +703,7 @@ class WP_Logout_Location {
 			self::$options['wpll_settings']['wpll_general_settings'] = $data;
 			update_option('wpll_settings', self::$options);
 			wp_send_json_success(array(
-				'message' => __('Settings Saved', 'wp-logout-location'),
+				'message' => __('Settings Saved', 'logout-location'),
 			));
 		}
 		wp_die();
@@ -742,6 +743,10 @@ class WP_Logout_Location {
 
 		$wpll_logout_history = isset(self::$options['wpll_settings']['wpll_logout_history']) ? self::$options['wpll_settings']['wpll_logout_history'] : [];
 
+		// Check if user is not found
+		if(!$user) {
+			return;
+		}
 		// If user has no role
 		if (!in_array($user->roles[0], (array) $user->roles)) {
 			wp_redirect(site_url('/'));
@@ -831,6 +836,6 @@ class WP_Logout_Location {
 } // end class
 
 // Activation hook
-register_activation_hook(__FILE__, array('WP_Logout_Location', 'activate'));
+register_activation_hook(__FILE__, array('Logout_Location', 'activate'));
 // Instantiate the class
-$WP_Logout_Location = WP_Logout_Location::getInstance();
+$Logout_Location = Logout_Location::getInstance();
