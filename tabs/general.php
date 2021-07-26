@@ -144,7 +144,7 @@ $total_roles = count($all_roles);
                             $selected = 'selected';
                         }
                     }
-                    echo "<option value='{$value}' {$selected}>{$key}</option>";
+                    echo "<option value='" . esc_attr( $value ) ."' $selected>" . esc_attr( $key ) . "</option>";
                 }
             } else {
                 echo "<option value=''>".__('No product (Woocommerce) found', 'wp-logout-location')."</option>";

@@ -34,8 +34,8 @@ $all_roles = get_editable_roles();
                 }
                 if ('Administrator' != $role_names) {
                     ?>
-                    <input type="checkbox" name="accesslist[<?php echo $role_key; ?>]" value="1" <?php echo $checked;?> <?php echo $disabled ?>>
-                    <label for=""><?php echo $role_names ?></label><br />
+                    <input type="checkbox" name="accesslist[<?php echo esc_attr( $role_key ); ?>]" value="1" <?php echo esc_html( $checked ); ?> <?php echo esc_html( $disabled ); ?>>
+                    <label for=""><?php echo esc_html( $role_names ); ?></label><br />
                     <?php
                 }
             }
