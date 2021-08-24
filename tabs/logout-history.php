@@ -28,10 +28,10 @@ $options = isset(self::$options['wpll_settings']['wpll_logout_history']) ? self:
         echo "<tr>";
         echo "<td valign='top'>" . $count++ . "</td>";
         echo "<td valign='top'>" . $user_login . "</td>";
-        echo "<td valign='top'>" . $value['display_name'] . "</td>";
-        echo "<td valign='top'>" . $value['role_name'] . "</td>";
-        echo "<td valign='top'>" . date('Y-m-d h:i:s A', $value['last_logout']) . "</td>";
-        echo "<td valign='top'>" . $value['details'] . "</td>";
+        echo "<td valign='top'>" . esc_html( $value['display_name'] ) . "</td>";
+        echo "<td valign='top'>" . esc_html( $value['role_name'] ) . "</td>";
+        echo "<td valign='top'>" . date('Y-m-d h:i:s A', esc_html( $value['last_logout'] ) ) . "</td>";
+        echo "<td valign='top'>" . esc_html( $value['details'] ) . "</td>";
         echo "</tr>";
     }
 } else {

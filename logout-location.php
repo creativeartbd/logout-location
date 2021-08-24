@@ -524,7 +524,7 @@ class Logout_Location {
 		} elseif ('general' === $button_for) {
 
 			$any_role_will_redirect = isset( $_POST['any_role_will_redirect'] ) ? sanitize_text_field( $_POST['any_role_will_redirect'] ) : 0;
-			$get_any_role_redirect_to = isset( $_POST['any_role_redirect_to'] ) ? (array) sanitize_text_field ( $_POST['any_role_redirect_to'] ) : [];
+			$get_any_role_redirect_to = isset( $_POST['any_role_redirect_to'] ) ? array_map( 'sanitize_text_field', $_POST['any_role_redirect_to'] ) : [];
 
 			$any_role_redirect_to = [];
 			foreach ( $get_any_role_redirect_to as $key => $value ) {
@@ -532,22 +532,23 @@ class Logout_Location {
 				$any_role_redirect_to[ $key ] = sanitize_text_field( $value );
 			}
 
-			$get_multiple_role_will_redirect = isset( $_POST['multiple_role_will_redirect'] ) ? sanitize_text_field( $_POST['multiple_role_will_redirect'] ) : [];
+			$get_multiple_role_will_redirect = isset( $_POST['multiple_role_will_redirect'] ) ? array_map( 'sanitize_text_field', $_POST['multiple_role_will_redirect'] ) : [];
 			$multiple_role_will_redirect = [];
+
 			foreach ( $get_multiple_role_will_redirect as $key => $value ) {
-				$key = strtolower( sanitize_text_field( $key ) );
-				$multiple_role_will_redirect[$key] = sanitize_text_field( $value );
+				$key = strtolower( $key );
+				$multiple_role_will_redirect[$key] = $value;
 			}
 
-			$get_multiple_role_redirect_to = isset( $_POST['multiple_role_redirect_to'] ) ? (array) sanitize_text_field( $_POST['multiple_role_redirect_to'] ) : [];
-
+			$get_multiple_role_redirect_to = isset( $_POST['multiple_role_redirect_to'] ) ?  $_POST['multiple_role_redirect_to']  : [];
 			$multiple_role_redirect_to = [];
+
 			foreach ( $get_multiple_role_redirect_to as $key => $value ) {
-				$key = strtolower( sanitize_text_field($key) );
+				$key = strtolower($key);
 				$value = array_map( 'sanitize_text_field', $value );
 				$multiple_role_redirect_to[$key] = $value;
 			}
-			
+
 			if ( empty( $role_type ) ) {
 				wp_send_json_error( [
 					'message' => __( 'Please select role type', 'logout-location' )
@@ -632,7 +633,7 @@ class Logout_Location {
 
 				if( !array_filter($multiple_role_will_redirect) ) {
 					wp_send_json_error( [
-						'message' => __(' Choose where to redirect', 'logout-location' )
+						'message' => __(' Choose where to redirect mul', 'logout-location' )
 					] );
 				}
 
