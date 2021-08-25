@@ -79,7 +79,7 @@ $total_roles = count($all_roles);
                             $selected = 'selected';
                         }
                     }
-                    echo "<option value='{$page_name}' {$selected}>{$page_title}</option>";
+                    echo "<option value='" . esc_attr( $page_name ) ."' " . esc_attr( $selected ) . ">" . esc_attr( $page_title ) . "</option>";
                 }
             } else {
                 echo "<option value=''>".__('No page found', 'wp-logout-location')."</option>";
@@ -104,7 +104,7 @@ $total_roles = count($all_roles);
                             $selected = 'selected';
                         }
                     }
-                    echo "<option value='{$value}' {$selected}>{$key}</option>";
+                    echo "<option value='". esc_attr( $value ) . "' ". esc_attr( $selected ) . ">" . esc_attr( $key ) . "</option>";
                 }
             } else {
                 echo "<option value=''>".__('No post found', 'wp-logout-location')."</option>";
@@ -124,7 +124,7 @@ $total_roles = count($all_roles);
                             $selected = 'selected';
                         }
                     }
-                    echo "<option value='{$value}' {$selected}>{$key}</option>";
+                    echo "<option value='". esc_attr( $value ) . "' ". esc_attr( $selected ) . ">" . esc_attr( $key ) . "</option>";
                 }
             } else {
                 echo "<option value=''>".__('No custom post found', 'wp-logout-location')."</option>";
@@ -144,7 +144,7 @@ $total_roles = count($all_roles);
                             $selected = 'selected';
                         }
                     }
-                    echo "<option value='" . esc_attr( $value ) ."' $selected>" . esc_attr( $key ) . "</option>";
+                    echo "<option value='". esc_attr( $value ) . "' ". esc_attr( $selected ) . ">" . esc_attr( $key ) . "</option>";
                 }
             } else {
                 echo "<option value=''>".__('No product (Woocommerce) found', 'wp-logout-location')."</option>";
@@ -166,7 +166,7 @@ $total_roles = count($all_roles);
                             $selected = 'selected';
                         }
                     }
-                    echo "<option value='{$user_login}' {$selected}>{$display_name}</option>";
+                    echo "<option value='". esc_attr( $user_login )."' ". esc_attr( $selected ) .">" . esc_attr( $display_name ) . "</option>";
                 }
             } else {
                 echo "<option value=''>" . __('No users found', 'wp-logout-location') . "</option>";
@@ -192,7 +192,7 @@ $total_roles = count($all_roles);
                     // Remove the query string
                     if(!strpos($category_slug, '?') !== false){
                         $category_slug = $category_slug;
-                        echo "<option value='{$category_slug}' {$selected}>{$category_name}</option>";
+                        echo "<option value='". esc_attr( $category_slug ) . "' " . esc_attr( $selected ) . ">" . esc_attr( $category_name ) . "</option>";
                     }
                 }
             } else {
@@ -218,7 +218,7 @@ $total_roles = count($all_roles);
                             $selected = 'selected';
                         }
                     }
-                    echo "<option value='{$tag_slug}' {$selected}>{$tag_name}</option>";
+                    echo "<option value='" . esc_attr( $tag_slug ) . "' " . esc_attr( $selected ) . ">" . esc_attr( $tag_name ) . "</option>";
                 }
             } else {
                 echo "<option value=''>" . __('No tag found', 'wp-logout-location') . "</option>";
@@ -263,7 +263,7 @@ foreach ($all_roles as $role) {
                                 $selected = 'selected';
                             }
                         }    
-                        echo "<option value='{$page_name}' {$selected}>{$page_title}</option>";
+                        echo "<option value='" . esc_attr( $page_name ) ."' " . esc_attr( $selected ) . ">" . esc_attr( $page_title ) . "</option>";
                     }
                 } else {
                     echo "<option value=''>" . __('No page found', 'wp-logout-location') . "</option>";
@@ -288,7 +288,7 @@ foreach ($all_roles as $role) {
                                 $selected = 'selected';
                             }
                         }
-                        echo "<option value='{$value}' {$selected}>{$key}</option>";
+                        echo "<option value='" . esc_attr( $value ) . "' " . esc_attr( $selected ) .">" . esc_attr( $key ) . "</option>";
                     }
                 } else {
                     echo "<option value=''>" . __('No post found', 'wp-logout-location') . "</option>";
@@ -308,7 +308,7 @@ foreach ($all_roles as $role) {
                                 $selected = 'selected';
                             }
                         }
-                        echo "<option value='{$value}' {$selected}>{$key}</option>";
+                        echo "<option value='" . esc_attr( $value ) . "' " . esc_attr( $selected ) .">" . esc_attr( $key ) . "</option>";
                     }
                 } else {
                     echo "<option value=''>" . __('No custom post found', 'wp-logout-location') . "</option>";
@@ -328,7 +328,7 @@ foreach ($all_roles as $role) {
                                 $selected = 'selected';
                             }
                         }
-                        echo "<option value='{$value}' {$selected}>{$key}</option>";
+                        echo "<option value='" . esc_attr( $value ) . "' " . esc_attr( $selected ) .">" . esc_attr( $key ) . "</option>";
                     }
                 } else {
                     echo "<option value=''>" . __('No produt (Woocommerce) found', 'wp-logout-location') . "</option>";
@@ -350,7 +350,7 @@ foreach ($all_roles as $role) {
                                 $selected = 'selected';
                             }
                         }
-                        echo "<option value='{$user_login}' {$selected}>{$display_name}</option>";
+                        echo "<option value='" . esc_attr( $user_login ) ."' " . esc_attr( $selected ) . ">" . esc_attr( $display_name ) . "</option>";
                     }
                 } else {
                     echo "<option value=''>" . __('No users found', 'wp-logout-location') . "</option>";
@@ -376,7 +376,7 @@ foreach ($all_roles as $role) {
                         // Remove the query string
                         if(!strpos($category_slug, '?') !== false){
                             $category_slug = $category_slug;
-                            echo "<option value='{$category_slug}' {$selected}>{$category_name}</option>";
+                            echo "<option value='" . esc_attr( $category_slug ) . "' " . esc_attr( $selected ) . ">" . esc_attr( $category_name ) . "</option>";
                         }
                     }
                 } else {
@@ -401,7 +401,7 @@ foreach ($all_roles as $role) {
                                 $selected = 'selected';
                             }
                         }
-                        echo "<option value='{$tag_slug}' {$selected}>{$tag_name}</option>";
+                        echo "<option value='" . esc_attr( $tag_slug ) ."' " . esc_attr( $selected ) . ">" . esc_attr( $tag_name ) . "</option>";
                     }
                 } else {
                     echo "<option value=''>" . __('No tag found', 'wp-logout-location') . "</option>";

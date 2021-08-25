@@ -11,7 +11,7 @@ $all_roles = get_editable_roles();
 <tr>
     <td colspan="2">
         <h4><?php _e('Access List', 'wp-logout-location'); ?></h4>
-        <p class="description"><?php _e('You can choose which roles can access this plugin. Allowed roles can update the general tab settings to set where to redirect after logout.', 'wp-logout-location'); ?></p>
+        <p class="description"><?php _e('You can choose which WordPress roles can access this plugin. Allowed roles can update the general tab settings.', 'wp-logout-location'); ?></p>
     </td>
 </tr>
 <tr>
